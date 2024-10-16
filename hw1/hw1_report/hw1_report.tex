@@ -1,0 +1,207 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%2345678901234567890123456789012345678901234567890123456789012345678901234567890
+%        1         2         3         4         5         6         7         8
+
+\documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out if you need a4paper
+\usepackage{amstext}
+%\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
+
+\IEEEoverridecommandlockouts                              % This command is only needed if
+                                                          % you want to use the \thanks command
+
+\overrideIEEEmargins                                      % Needed to meet printer requirements.
+
+%In case you encounter the following error:
+%Error 1010 The PDF file may be corrupt (unable to open PDF file) OR
+%Error 1000 An error occurred while parsing a contents stream. Unable to analyze the PDF file.
+%This is a known problem with pdfLaTeX conversion filter. The file cannot be opened with acrobat reader
+%Please use one of the alternatives below to circumvent this error by uncommenting one or the other
+%\pdfobjcompresslevel=0
+%\pdfminorversion=4
+
+% See the \addtolength command later in the file to balance the column lengths
+% on the last page of the document
+
+% The following packages can be found on http:\\www.ctan.org
+%\usepackage{graphics} % for pdf, bitmapped graphics files
+%\usepackage{epsfig} % for postscript graphics files
+%\usepackage{mathptmx} % assumes new font selection scheme installed
+%\usepackage{times} % assumes new font selection scheme installed
+%\usepackage{amsmath} % assumes amsmath package installed
+%\usepackage{amssymb}  % assumes amsmath package installed
+
+\title{\LARGE \bf
+Homework 1 Report
+}
+
+
+\author{Arrian Chi% <-this % stops a space
+}
+
+
+\begin{document}
+
+
+
+\maketitle
+\thispagestyle{empty}
+\pagestyle{empty}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+
+In this homework, I have simulated 3 different systems: a system of 3 metal spheres connected by beams falling in a viscous liquid, the same system but with N spheres, and a bending elastic beam subject to a single point load. The findings in each of these systems is discussed in the following sections.
+
+\end{abstract}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{4.1 Rigid Spheres and Elastic Beam Falling in Viscous Flow}
+
+In this problem, we consider 3 falling metal spheres on an elastic beam that is falling under gravity. The constants are shown in the following table:
+
+\begin{table}[h]
+\caption{Variables Involved in the System of 3 Metal Spheres}
+\label{table_variables}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Variable & Description & Sample Value \\
+\hline
+& & \\ $\mu$ & Viscosity of the fluid & 1000 Pa-s \\
+& & \\ $\rho_{ \text{fluid} }$ & Density of the fluid & 1000 kg/m\(^3\) \\
+& & \\ $\rho_{\text{metal}}$ & Density of the spheres & 7000 kg/m\(^3\) \\
+& & \\ $R_1, R_2, R_3$ & Radius of each sphere & 0.005 m, 0.025 m, \\ & & 0.005 m \\
+& & \\ $l$ & Length of the beam & 0.10 m \\
+& & \\ $r_0$ & Cross-sectional radius  & 0.001 m \\ & of the beam & \\
+& & \\ $E$ & Young's modulus & $1.0 \times * 10^{9}$ Pa \\ & of the beam & \\
+& & \\ $EA$ & Stretching stiffness & $E\pi r_0^2$  \\ & of the beam & \\
+& & \\ $EI$ & Bending stiffness & $E\pi r_0^4 / 4$  \\ & of the beam & \\
+& & \\ $\Delta l$ & Half-length of & 0.05 m \\ & the beam & \\
+
+& & \\ $x_1, x_2, x_3$ & x position of each & initial at 0, $\Delta l$, $2\Delta l$\\ & sphere & \\
+& & \\ $y_1, y_2, y_3$ & y position of each & all initial at 0\\ & sphere & \\
+& & \\ $m_1, m_2, m_3$ & Mass of each sphere & $\frac{4}{3}\pi R_i^3 \rho_{\text{metal}}$\\
+& & \\ $C_i$ & Damping coefficient& $6 \pi \mu R_i$ \\ &  due to fluid & \\
+& & \\ $g$ & Acceleration due to  & 9.81 m/s\(^2\) \\ & gravity & \\
+& & \\ $W_i$ & Weight of each & $\frac{4}{3} \pi R_i^3(\rho_{\text{metal}}-\rho_{\text{fluid}}g)$ \\ & sphere & \\
+\hline
+\end{tabular}
+\end{center}
+\end{table}
+
+It should also be noted that the elastic energy of the beam is given by the following equation:
+\begin{center}
+        $E^{\text{elastic}} = E^S_1 + E^S_2 + E^b$
+\end{center}
+where $E^S_1$ and $E^S_2$ are the stretching energies of the beam on the left and right sides of the beam, respectively, and $E^b$ is the bending energy of the beam. The stretching energy of the beam is given by the following equation:
+\begin{center}
+        $E^S_1 = \frac{1}{2}EA\left( 1 - \frac{\sqrt{(x_2 - x_1)^2 + (y_2 - y_1)^2 }}{\Delta l}\right)^2 \Delta l$ \\
+
+
+
+        $E^S_2 = \frac{1}{2}EA\left( 1 - \frac{\sqrt{(x_3 - x_2)^2 + (y_3 - y_2)^2 }}{\Delta l}\right)^2 \Delta l$ \\
+
+
+
+        $E^b = \frac{1}{2} \frac{EI}{\Delta l}\left( 2 \tan{\frac{\theta}{2}} \right)^2$
+\end{center}
+
+
+
+
+Using these variables, we may write our equations of motion for each sphere in the system:
+
+(TODO: Write the 6 equations we used)
+
+And the discretized equations of motion for the beam are given by the following equations:
+
+(TODO: write the discretized version of the equations we used)
+
+In the explicit method, I replace the velocity term used in the damping force with the old velocity at $t_k$. This makes the integration method less coupled and easier to work with.
+
+(TODO: just copy the equations)
+
+In the implicit method, I use the following Jacobian matrix to input into the Newton-Raphson method:
+
+(TODO: insert how we calculate the Jacobian matrix here)
+
+Now we may answer the questions posed in the assignment:
+
+\subsection{Q1: Shape of the structure at t = {0, 0.01, 0.05, 0.10, 1.0, 10.0}}
+
+\subsection{Q1: Position and Velocity Plot of $R_2$  as a function of time(TODO: $t$)}
+
+\subsection{ Q2: Terminal velocity of the system}
+
+(TODO: need to examine the velocity plots of $R_1$ and $R_3$)
+
+\subsection{ Q3: What happens to the turning angle if all radii are the same? }
+
+(TODO: calculate turning angle and look at the shape of the structure)
+
+\subsection{ Q4: What happens when we change the time step, specifically for the explicit simulation?}
+
+
+
+\section{4.2 Generalized Case of Elastic Beam Falling in Viscous Flow}
+
+(TODO Opt: make a explicit version)
+
+In the general case of the elastic beam falling, we have $N = 21$ spheres. We use the same variables as in the previous case, but some variables are calculated
+\subsection{Q1: Plot of position and velocity of middle node as a function of time}
+
+\subsection{Q2: Final shape of deformed beam}
+
+\subsection{Q3: What is the significance of spatial discretization and temporal discretization? }
+
+(TODO: Include plots of terminal velocity vs number of nodes and terminal velocity vs time step size)
+
+
+
+
+\section{4.3 Elastic Beam Bending}
+
+\subsection{Q1: Plot maximum vertical displacement of beam as a function of time. Compare it with the theoretical prediction from the Euler beam theory.}
+
+(TODO: Plot the max vertical displacement and check if $y_{\text{max}}$ is a steady value. Determine if the value is accurate or not.)
+
+\subsection{Q2: What is the benefit of the simulation over the predictions of the Euler Beam Theory?}
+
+(TODO: Use simulation on $P = 20000$. Note that the Euler Beam Theory is only accurate for small deflections.)
+
+(TODO opt: make a plot of P vs $y_{\text{max}}$ using data from the simulation and the beam theory and find the P where the solutions diverge.)
+
+
+   \begin{figure}[thpb]
+      \centering
+      \framebox{\parbox{3in}{We suggest that you use a text box to insert a graphic (which is ideally a 300 dpi TIFF or EPS file, with all fonts embedded) because, in an document, this method is somewhat more stable than directly inserting a picture.
+}}
+      %\includegraphics[scale=1.0]{figurefile}
+      \caption{Inductance of oscillation winding on amorphous
+       magnetic core versus DC bias magnetic field}
+      \label{figurelabel}
+   \end{figure}
+
+
+\section{CONCLUSIONS}
+
+A conclusion section is not required. Although a conclusion may review the main points of the paper, do not replicate the abstract as the conclusion. A conclusion might elaborate on the importance of the work or suggest applications and extensions.
+
+\addtolength{\textheight}{-12cm}   % This command serves to balance the column lengths
+                                  % on the last page of the document manually. It shortens
+                                  % the textheight of the last page by a suitable amount.
+                                  % This command does not take effect until the next page
+                                  % so it should come on the page before the last. Make
+                                  % sure that you do not shorten the textheight too much.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+\end{document}

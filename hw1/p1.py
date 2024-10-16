@@ -517,7 +517,6 @@ def main():
         # Number of time steps
 
         ctime = 0
-        dt = 1e-5
         u = u0.copy()
         q = q0.copy()
 
@@ -616,6 +615,7 @@ def main():
         return Nsteps, all_pos, all_v, midAngle
 
 
+    dt = 1e-5
     Nsteps, all_pos, all_v, midAngle = p1_explicit(q0, u, dt, tol, maximum_iter, m, mMat, EI, EA, W, C, deltaL)
 
     plt.figure(2)
@@ -637,7 +637,7 @@ def main():
     plt.ylabel('Angle, $\\alpha$ [deg]')
     plt.savefig('fallingBeam_angle_p1_explicit.png')
 
-
+    dt = 1e-2
     Nsteps, all_pos, all_v, midAngle = p1_implicit(q0, u, dt, tol, maximum_iter, m, mMat, EI, EA, W, C, deltaL)
 
     plt.figure(5)
