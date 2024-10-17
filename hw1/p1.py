@@ -396,6 +396,7 @@ def calculateNewQImplicit(q_guess, q_old, u_old, dt, tol, maximum_iter,
         if iter_count > maximum_iter:
             flag = -1  # return with an error signal
             return q_new, flag
+        
 
     return q_new, flag
 
@@ -561,8 +562,12 @@ def main():
         return Nsteps, all_pos, all_v, midAngle
 
     # Problem 1: Implicit time integration
-    def p1_implicit(q0, u0, dt, tol, maximum_iter, m, mMat, EI, EA, W, C, deltaL):
+    def p1_implicit(q0, u0, dt, tol, maximum_iter, m, mMat, EI, EA, W, C, deltaL, snapshots):
         # Number of time steps
+
+        snapIdx = 0
+
+        
         Nsteps = round(totalTime / dt)
 
         ctime = 0
@@ -610,6 +615,10 @@ def main():
             vec1 = np.array([q[2], q[3], 0]) - np.array([q[0], q[1], 0])
             vec2 = np.array([q[4], q[5], 0]) - np.array([q[2], q[3], 0])
             midAngle[timeStep] = np.degrees(np.arctan2(np.linalg.norm(np.cross(vec1, vec2)), np.dot(vec1, vec2)))
+
+            if (ctime == snapshots[snapIdx]):
+                
+
 
         # Plot
         return Nsteps, all_pos, all_v, midAngle
