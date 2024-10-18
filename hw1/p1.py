@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from math import isclose
+
 
 ### Provided Functions
 
@@ -391,12 +393,12 @@ def calculateNewQImplicit(q_guess, q_old, u_old, dt, tol, maximum_iter,
 
         # Update iteration number
         iter_count += 1
-        print(f'Iter={iter_count-1}, error={error:.6e}')
+        # print(f'Iter={iter_count-1}, error={error:.6e}')
 
         if iter_count > maximum_iter:
             flag = -1  # return with an error signal
             return q_new, flag
-        
+
 
     return q_new, flag
 
@@ -457,7 +459,7 @@ def main():
     maximum_iter = 100
 
     # Total simulation time (it exits after t=totalTime)
-    totalTime = 10
+    totalTime = 100
 
     # Indicate whether images should be saved
     saveImage = 0
@@ -514,20 +516,58 @@ def main():
     q = q0.copy()
     u = (q - q0) / dt
 
-    def p1_explicit(q0, u0, dt, tol, maximum_iter, m, mMat, EI, EA, W, C, deltaL):
-        # Number of time steps
+    # collect data at these times
+    snapshots = [0, 0.01, 0.05, 0.1, 1, 10, 100]
+
+    # Q1: Plot shape of system
+    def check_plot_shape(isSnapsFinished, ctime, snapshots, snapIdx, q, file_prefix):
+        if (not isSnapsFinished):
+            if (isclose(ctime, snapshots[snapIdx])):
+                print(f"saving plot at {ctime}, snapIdx={snapIdx}, snapshots[snapIdx]={snapshots[snapIdx]}")
+                x1 = q[::2]  # Selects every second element starting from index 0
+                x2 = q[1::2]  # Selects every second element starting from index 1
+                h1 = plt.figure(1)
+                plt.clf()  # Clear the current figure
+                plt.plot(x1, x2, 'ko-')  # 'ko-' indicates black color with circle markers and solid lines
+                plt.title(f't={ctime:.6f}')  # Format the title with the current time
+                plt.axis('equal')  # Set equal scaling
+                plt.xlabel('x [m]')
+                plt.ylabel('y [m]')
+                plt.savefig(f'{file_prefix}_{snapshots[snapIdx]:.2f}.png')
+                # plt.show()  # Display the figure
+                snapIdx += 1
+
+            elif (ctime > snapshots[snapIdx]):
+                print (f"skipping snapIdx {snapIdx} with value {snapshots[snapIdx]} at time {ctime}")
+                snapIdx += 1
+
+
+            if (snapIdx == len(snapshots)):
+                isSnapsFinished = True
+
+
+        return isSnapsFinished, snapIdx
+
+    def p1_explicit(q0, u0, dt, tol, maximum_iter, m, mMat, EI, EA, W, C, deltaL, snapshots):
+        # Current SnapShots
+        snapIdx = 0
+        isSnapsFinished = False
 
         ctime = 0
         u = u0.copy()
         q = q0.copy()
 
+        # Number of time steps
         Nsteps = round(totalTime / dt)
         all_pos = np.zeros(Nsteps)
         all_v = np.zeros(Nsteps)
         midAngle = np.zeros(Nsteps)
 
+        # Check for snapshot of initial shape
+        isSnapsFinished, snapIdx = check_plot_shape(isSnapsFinished, ctime, snapshots, snapIdx, q, 'p1_explicit')
+
         for timeStep in range(1, Nsteps):  # Python uses 0-based indexing, hence range starts at 1
-            # print(f't={ctime:.6f}')
+            print(f't={ctime:.6f}')
 
             q = calculateNewQExplicit(q0, q0, u, dt, tol, maximum_iter, m, mMat, EI, EA, W, C, deltaL)
 
@@ -537,21 +577,6 @@ def main():
             # Update q0
             q0 = q
 
-            """
-            if timeStep % plotStep == 0:
-            x1 = q[::2]  # Selects every second element starting from index 0
-            x2 = q[1::2]  # Selects every second element starting from index 1
-            h1 = plt.figure(1)
-            plt.clf()  # Clear the current figure
-            clear_output(wait=True)  # Clear the previous plot/output: Only for iPython
-            plt.plot(x1, x2, 'ko-')  # 'ko-' indicates black color with circle markers and solid lines
-            plt.title(f't={ctime:.6f}')  # Format the title with the current time
-            plt.axis('equal')  # Set equal scaling
-            plt.xlabel('x [m]')
-            plt.ylabel('y [m]')
-            plt.show()  # Display the figure
-            """
-
             all_pos[timeStep] = q[3]  # Python uses 0-based indexing
             all_v[timeStep] = u[3]
 
@@ -559,15 +584,24 @@ def main():
             vec1 = np.array([q[2], q[3], 0]) - np.array([q[0], q[1], 0])
             vec2 = np.array([q[4], q[5], 0]) - np.array([q[2], q[3], 0])
             midAngle[timeStep] = np.degrees(np.arctan2(np.linalg.norm(np.cross(vec1, vec2)), np.dot(vec1, vec2)))
+
+            isSnapsFinished, snapIdx = check_plot_shape(isSnapsFinished, ctime, snapshots, snapIdx, q, 'p1_explicit')
+
+        ctime += dt
+        isSnapsFinished, snapIdx = check_plot_shape(isSnapsFinished, ctime, snapshots, snapIdx, q, 'p1_explicit')
+
+        print(f"Terminal Velocity of R1: {u[1]} m/s")
+        print(f"Terminal Velocity of R2: {all_v[-1]} m/s")
+        print(f"Terminal Velocity of R3: {u[5]} m/s")
         return Nsteps, all_pos, all_v, midAngle
 
     # Problem 1: Implicit time integration
     def p1_implicit(q0, u0, dt, tol, maximum_iter, m, mMat, EI, EA, W, C, deltaL, snapshots):
-        # Number of time steps
-
+        # Current SnapShots
         snapIdx = 0
+        isSnapsFinished = snapIdx == len(snapshots)
 
-        
+        # Number of time steps
         Nsteps = round(totalTime / dt)
 
         ctime = 0
@@ -577,6 +611,9 @@ def main():
         midAngle = np.zeros(Nsteps)
         u = u0.copy()
         q = q0.copy()
+
+        # Check for snapshot of initial shape
+        isSnapsFinished, snapIdx = check_plot_shape(isSnapsFinished, ctime, snapshots, snapIdx, q, 'p1_implicit')
 
         for timeStep in range(1, Nsteps):  # Python uses 0-based indexing, hence range starts at 1
             # print(f't={ctime:.6f}')
@@ -593,21 +630,6 @@ def main():
             # Update q0
             q0 = q
 
-            """
-            if timeStep % plotStep == 0:
-            x1 = q[::2]  # Selects every second element starting from index 0
-            x2 = q[1::2]  # Selects every second element starting from index 1
-            h1 = plt.figure(1)
-            plt.clf()  # Clear the current figure
-            clear_output(wait=True)  # Clear the previous plot/output: Only for iPython
-            plt.plot(x1, x2, 'ko-')  # 'ko-' indicates black color with circle markers and solid lines
-            plt.title(f't={ctime:.6f}')  # Format the title with the current time
-            plt.axis('equal')  # Set equal scaling
-            plt.xlabel('x [m]')
-            plt.ylabel('y [m]')
-            plt.show()  # Display the figure
-            """
-
             all_pos[timeStep] = q[3]  # Python uses 0-based indexing
             all_v[timeStep] = u[3]
 
@@ -616,16 +638,25 @@ def main():
             vec2 = np.array([q[4], q[5], 0]) - np.array([q[2], q[3], 0])
             midAngle[timeStep] = np.degrees(np.arctan2(np.linalg.norm(np.cross(vec1, vec2)), np.dot(vec1, vec2)))
 
-            if (ctime == snapshots[snapIdx]):
-                
+            isSnapsFinished, snapIdx = check_plot_shape(isSnapsFinished, ctime, snapshots, snapIdx, q, 'p1_implicit')
 
 
+        ctime += dt
+        isSnapsFinished, snapIdx = check_plot_shape(isSnapsFinished, ctime, snapshots, snapIdx, q, 'p1_implicit')
+        
+        # Q2: Terminal Velocity
+        print(f"Terminal Velocity of R1: {u[1]} m/s")
+        print(f"Terminal Velocity of R2: {all_v[-1]} m/s")
+        print(f"Terminal Velocity of R3: {u[5]} m/s")
         # Plot
         return Nsteps, all_pos, all_v, midAngle
 
-
+    """
+    print("---------------------------------------------------------------")
     dt = 1e-5
-    Nsteps, all_pos, all_v, midAngle = p1_explicit(q0, u, dt, tol, maximum_iter, m, mMat, EI, EA, W, C, deltaL)
+    print(f"Executing explicit simulation with dt = {dt}")
+
+    Nsteps, all_pos, all_v, midAngle = p1_explicit(q0, u, dt, tol, maximum_iter, m, mMat, EI, EA, W, C, deltaL, snapshots)
 
     plt.figure(2)
     t = np.linspace(0, totalTime, Nsteps)
@@ -645,10 +676,15 @@ def main():
     plt.xlabel('Time, t [s]')
     plt.ylabel('Angle, $\\alpha$ [deg]')
     plt.savefig('fallingBeam_angle_p1_explicit.png')
-
+    print("---------------------------------------------------------------")
+    """
+    print("---------------------------------------------------------------")
     dt = 1e-2
-    Nsteps, all_pos, all_v, midAngle = p1_implicit(q0, u, dt, tol, maximum_iter, m, mMat, EI, EA, W, C, deltaL)
+    print(f"Executing implicit simulation with dt = {dt}")
 
+    Nsteps, all_pos, all_v, midAngle = p1_implicit(q0, u, dt, tol, maximum_iter, m, mMat, EI, EA, W, C, deltaL, snapshots)
+
+    # Q1: Position and Velocity of R2
     plt.figure(5)
     t = np.linspace(0, totalTime, Nsteps)
     plt.plot(t, all_pos)
@@ -668,8 +704,9 @@ def main():
     plt.ylabel('Angle, $\\alpha$ [deg]')
     plt.savefig('fallingBeam_angle_p1_implicit.png')
 
+    print("---------------------------------------------------------------")
 
-    plt.show()
+    # plt.show()
 
 if __name__ == '__main__':
     main()
