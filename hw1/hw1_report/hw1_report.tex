@@ -151,12 +151,14 @@ The terminal velocity of the system (all 3 spheres) is -0.005926 m/s. We find th
 
 \subsection{ Q3: What happens to the turning angle if all radii are the same? }
 
-If all the radii of the spheres are the same the turning angle will remain 0. Gravity acts on each part of the beam with equal force, so each sphere has the same acceleration and the same velocity. Because they all started at the same y, their displacements will also remain the same. So the turning angle remains what it was in the initial condition, which is 0 degrees.
+If all the radii of the spheres are the same the turning angle will remain 0. Gravity acts on each part of the beam with equal force, so each sphere has the same acceleration and the same velocity. Because they all started at the same y, their displacements will also remain the same. So the turning angle remains what it was in the initial condition, which is 0 degrees. The final shape and turning angle graph is shown in (TODO: Figure)
 
-(TODO: calculate turning angle and look at the shape of the structure)
+(TODO: calculate turning angle and look at the shape the structure)
 
 \subsection{ Q4: What happens when we change the time step, specifically for the explicit simulation?}
+At larger time steps, the explicit simulation has a harder time converging. In the simulation, when $\Delta t = 1.0 \times  10^2$, the simulation warns me of scalar overflow errors. The resultant graph is shown in Figure (TODO: insert number here). This behavior emerges from the fact that our simulation relies on discretized formulas to compute an approximation. These discretizations assume a small time step, but the magnitude of its granularity is found with trial and error. In our explicit implementation, we use the time step directly without calculating margins of error (there is no way to do so), whereas in the implicit implementation, we provide a tolerance that is used to make sure the values are in the neighborhood of the ground truth (measuring how close we are to our last guess). This means in our explicit implementation, the variables in our computation accumulate error at every iteration, eventually causing values to diverge from their analytical truths. This is why explicit simulations benefit from having small time steps, at the cost of a higher computation time (due to more iterations).
 
+I would like to note here that I believe that another reason the explicit simulation fails at smaller time steps is because we are solving for the velocity (and the velocity is not )
 
 
 \section{4.2 Generalized Case of Elastic Beam Falling in Viscous Flow}
@@ -172,7 +174,7 @@ In the general case of the elastic beam falling, we have $N = 21$ spheres. We us
 
 (TODO: Include plots of terminal velocity vs number of nodes and terminal velocity vs time step size)
 
-
+vs nodes -0.005833482666667278
 
 
 \section{4.3 Elastic Beam Bending}
