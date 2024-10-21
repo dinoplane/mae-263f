@@ -449,8 +449,6 @@ def p3_implicit(q0, u0, totalTime, dt, tol, maximum_iter, m, mMat, EI, EA, P, de
     ctime = 0
 
     all_pos = np.zeros(Nsteps)
-    all_v = np.zeros(Nsteps)
-    midAngle = np.zeros(Nsteps)
     u = u0.copy()
     q = q0.copy()
 
@@ -472,13 +470,9 @@ def p3_implicit(q0, u0, totalTime, dt, tol, maximum_iter, m, mMat, EI, EA, P, de
         # Update q0
         q0 = q
 
-        all_pos[timeStep] = q[2*pNode+1]  # Python uses 0-based indexing
-        all_v[timeStep] = u[2*pNode+1]
 
-        # Angle at the center
-        vec1 = np.array([q[2*pNode], q[2*pNode+1], 0]) - np.array([q[2*pNode-2], q[2*pNode-1], 0])
-        vec2 = np.array([q[2*pNode+2], q[2*pNode+3], 0]) - np.array([q[2*pNode], q[2*pNode+1], 0])
-        midAngle[timeStep] = np.degrees(np.arctan2(np.linalg.norm(np.cross(vec1, vec2)), np.dot(vec1, vec2)))
+        max_vert = max(abs(q[1::2]))
+        all_pos[timeStep] = max_vert #q[2*pNode+1]  # Python uses 0-based indexing
 
         isSnapsFinished, snapIdx = check_plot_shape(isSnapsFinished, ctime, snapshots, snapIdx, q, 'p3_implicit', pNode)
 
@@ -488,7 +482,7 @@ def p3_implicit(q0, u0, totalTime, dt, tol, maximum_iter, m, mMat, EI, EA, P, de
     
     print(f"Max vertical Displacement R_P: {all_pos[-1]} m")
     # Plot
-    return Nsteps, all_pos, all_v, midAngle
+    return Nsteps, all_pos
 
 def createVariables(nv, rodLength, rodOuterRadius, rodInnerRadius, forceP, d):
     # nv = 21 # Odd vs even number should show different behavior
@@ -518,8 +512,6 @@ def createVariables(nv, rodLength, rodOuterRadius, rodInnerRadius, forceP, d):
     pNode = round((nv - 1) * percentOfRod)
     P = np.zeros(ndof)
     P[2*pNode + 1] = -forceP
-    print(nv, pNode)
-    print(ndof, 2*pNode + 1)
 
     # Initial conditions
     q0 = np.zeros(ndof)
@@ -573,14 +565,14 @@ def main():
     EA = E * A
     
     # Tolerance on force function
-    tol = EI / rodLength**2 * 1e-3  # small enough force that can be neglected
+    tol = EI / rodLength**2 * 1e-5  # small enough force that can be neglected
 
     q0, m, mMat, P, deltaL, pNode = createVariables(nv, rodLength, rodOuterRadius, rodInnerRadius, forceP, d)
 
     q = q0.copy()
     u = (q - q0) / dt
     
-    snapshots = [0, 0.01, 0.05, 0.1, 1, 10, 50, 100]
+    snapshots = [1]
 
     #specify free Indices
     ndof = 2 * nv
@@ -591,36 +583,22 @@ def main():
     free_index = np.setdiff1d(all_DOFs, fixed_index)
 
     print("Problem 3: Elastic Beam Simulation")
-    
+    """
     print("---------------------------------------------------------------")
     dt = 1e-2
     print(f"Executing implicit simulation with dt = {dt}")
 
-    Nsteps, all_pos, all_v, midAngle = p3_implicit(q0, u, totalTime, dt, tol, maximum_iter, m, mMat, EI, EA, P, deltaL, pNode, snapshots, free_index)
+    Nsteps, all_pos = p3_implicit(q0, u, totalTime, dt, tol, maximum_iter, m, mMat, EI, EA, P, deltaL, pNode, snapshots, free_index)
 
     # Q1: Position and Velocity of R2
     plt.figure(5)
     t = np.linspace(0, totalTime, Nsteps)
     plt.plot(t, all_pos)
     plt.xlabel('Time, t [s]')
-    plt.ylabel('Displacement, $\\delta$ [m]')
+    plt.ylabel('Maximum Vertical Displacement, $\\delta$ [m]')
     plt.savefig('p3_implicit_fallingBeam.png')
-
-    plt.figure(6)
-    plt.plot(t, all_v)
-    plt.xlabel('Time, t [s]')
-    plt.ylabel('Velocity, v [m/s]')
-    plt.savefig('p3_implicit_fallingBeam_velocity.png')
-
-    plt.figure(7)
-    plt.plot(t, midAngle, 'r')
-    plt.xlabel('Time, t [s]')
-    plt.ylabel('Angle, $\\alpha$ [deg]')
-    plt.savefig('p3_implicit_fallingBeam_angle.png')
-
-    plt.show()
     print("---------------------------------------------------------------")
-    """
+    
     print("---------------------------------------------------------------")
 
     print("Comparing with Euler Bernoulli Beam Theory")
@@ -634,14 +612,15 @@ def main():
     print(f"Analytical Maximum Vertical Displacement: {analytical_disp} m")
 
     print("---------------------------------------------------------------")
+    
     print("---------------------------------------------------------------")
     print("Trying heavier load P = 20000")
-
+    forceP = 20000
     q0, m, mMat, P, deltaL, pNode = createVariables(nv, rodLength, rodOuterRadius, rodInnerRadius, forceP, d)
     q = q0.copy()
     u = (q - q0) / dt
 
-    Nsteps, all_pos, all_v, midAngle = p3_implicit(q0, u, totalTime, dt, tol, maximum_iter, m, mMat, EI, EA, P, deltaL, pNode, snapshots, free_index)
+    Nsteps, all_pos = p3_implicit(q0, u, totalTime, dt, tol, maximum_iter, m, mMat, EI, EA, P, deltaL, pNode, snapshots, free_index)
     
     sim_disp = all_pos[-1]
     c = min(d, rodLength - d)
@@ -653,11 +632,11 @@ def main():
 
 
     print("---------------------------------------------------------------")
-
+    """
     print("---------------------------------------------------------------")
     print("Testing multiple P")
     dt = 1e-2
-    testPs = np.linspace(0.001, 1, 100)
+    testPs = np.linspace(0.1, 100, 100)
     sim_vals = np.zeros(testPs.size)
     theo_vals = np.zeros(testPs.size)
     snapshots = []
@@ -667,9 +646,9 @@ def main():
         q = q0.copy()
         u = (q - q0) / dt
 
-        Nsteps, all_pos, all_v, midAngle = p3_implicit(q0, u, totalTime, dt, tol, maximum_iter, m, mMat, EI, EA, P, deltaL, pNode, snapshots, free_index)
+        Nsteps, all_pos = p3_implicit(q0, u, totalTime, dt, tol, maximum_iter, m, mMat, EI, EA, P, deltaL, pNode, snapshots, free_index)
 
-        sim_vals[pIdx] = sim_vals[-1]
+        sim_vals[pIdx] = all_pos[-1]
 
         c = min(d, rodLength - d)
         analytical_disp = forceP * c * (rodLength**2 - c**2)**1.5 / (9*sqrt(3) * E * I * rodLength)
@@ -680,12 +659,12 @@ def main():
     plt.plot(testPs, sim_vals, 'r', label="Simulation")
     plt.plot(testPs, theo_vals, 'b', label="Theoretical")
     plt.xlabel('Load at d=0.75 , P, [N]')
-    plt.ylabel('Maximum vertical displacement, [m]')
+    plt.ylabel('Maximum Vertical Displacement, [m]')
     plt.legend()
-    plt.savefig('p3_implicit_vterm_vs_dt.png')
+    plt.savefig('p3_implicit_maxvert.png')
     plt.show()
 
     print("---------------------------------------------------------------")
-    """
+    
 if __name__ == "__main__":
     main()

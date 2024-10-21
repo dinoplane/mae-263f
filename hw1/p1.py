@@ -553,7 +553,7 @@ def main():
     nv = 3
 
     # Time step (for implicit)
-    dt = 1e-2
+    dt = 1e-5
 
     # Rod Length
     RodLength = 0.10
@@ -585,12 +585,6 @@ def main():
 
     # Total simulation time (it exits after t=totalTime)
     totalTime = 10
-
-    # Indicate whether images should be saved
-    saveImage = 0
-
-    # How often the plot should be saved?
-    plotStep = 50
 
     # Utility quantities
     ne = nv - 1
@@ -642,10 +636,11 @@ def main():
     u = (q - q0) / dt
 
     # collect data at these times
-    snapshots = [0, 0.01, 0.05, 0.1, 1, 10, 100]
+    snapshots = [0, 0.01, 0.05, 0.1, 1, 10]
+
     print("Problem 1: 3 rigid sphere simulation")
     print("---------------------------------------------------------------")
-    dt = 1e-5
+    dt = 1e-2
     print(f"Executing explicit simulation with dt = {dt}")
 
     Nsteps, all_pos, all_v, midAngle = p1_explicit(q0, u, totalTime, dt, tol, maximum_iter, m, mMat, EI, EA, W, C, deltaL, snapshots)
@@ -669,7 +664,7 @@ def main():
     plt.ylabel('Angle, $\\alpha$ [deg]')
     plt.savefig('p1_explicit_fallingBeam_angle.png')
     print("---------------------------------------------------------------")
-    
+
     print("---------------------------------------------------------------")
     dt = 1e-2
     print(f"Executing implicit simulation with dt = {dt}")

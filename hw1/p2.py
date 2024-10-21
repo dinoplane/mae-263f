@@ -602,7 +602,7 @@ def createVariables(nv):
 def main():
     # Inputs (SI units)
     # number of vertices
-    nv = 3 # Odd vs even number should show different behavior
+    nv = 21 # Odd vs even number should show different behavior
 
     # Time step
     dt = 1e-2
@@ -663,7 +663,7 @@ def main():
     plt.ylabel('Angle, $\\alpha$ [deg]')
     plt.savefig('p2_explicit_fallingBeam_angle.png')
     print("---------------------------------------------------------------")
-    
+    """
     print("---------------------------------------------------------------")
     dt = 1e-2
     print(f"Executing implicit simulation with dt = {dt}")
@@ -691,7 +691,7 @@ def main():
     plt.savefig('p2_implicit_fallingBeam_angle.png')
 
     print("---------------------------------------------------------------")
-    
+    """
     print("---------------------------------------------------------------")
     print("Plotting terminal velocity vs N")
     totalTime = 50
@@ -710,9 +710,6 @@ def main():
         Nsteps, all_pos, all_v, midAngle = p2_implicit(q0, u, totalTime, dt, tol, maximum_iter, m, mMat, EI, EA, W, C, deltaL, midNode,snapshots)
         term_v[stepIdx] = all_v[-1]
     
-    print(N_nodes)
-    print(term_v)
-    
     plt.figure(8)
     plt.plot(N_nodes, term_v, 'r')
     plt.xlabel('Number of Nodes')
@@ -721,7 +718,6 @@ def main():
 
     print("---------------------------------------------------------------")
 
-    """
     print("---------------------------------------------------------------")
     print("Plotting terminal velocity vs time step")
     totalTime = 12  
@@ -748,7 +744,7 @@ def main():
     plt.xscale('log')
     plt.savefig('p2_implicit_vterm_vs_dt.png')
     print("---------------------------------------------------------------")
-
+    """
     
         
 
