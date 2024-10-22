@@ -224,7 +224,7 @@ def getFb(q, EI, deltaL):
 
     Parameters:
     q : np.ndarray
-        A vector of size 6 containing the coordinates [x_{k-1}, y_{k-1}, x_k, y_k, x_{k+1}, y_{k+1}].
+        A vector of size n containing the coordinates
     EI : float
         The bending stiffness.
     deltaL : float
@@ -232,9 +232,9 @@ def getFb(q, EI, deltaL):
 
     Returns:
     Fb : np.ndarray
-        Bending force (vector of size 6).
+        Bending force (vector of size n x n).
     Jb : np.ndarray
-        Jacobian of the bending force (6x6 matrix).
+        Jacobian of the bending force (n x n matrix).
     """
 
     ndof = q.size # number of DOF
@@ -691,7 +691,7 @@ def main():
     plt.savefig('p2_implicit_fallingBeam_angle.png')
 
     print("---------------------------------------------------------------")
-    """
+    
     print("---------------------------------------------------------------")
     print("Plotting terminal velocity vs N")
     totalTime = 50
@@ -744,7 +744,7 @@ def main():
     plt.xscale('log')
     plt.savefig('p2_implicit_vterm_vs_dt.png')
     print("---------------------------------------------------------------")
-    """
+    
     
         
 

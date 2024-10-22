@@ -583,7 +583,7 @@ def main():
     free_index = np.setdiff1d(all_DOFs, fixed_index)
 
     print("Problem 3: Elastic Beam Simulation")
-    """
+    
     print("---------------------------------------------------------------")
     dt = 1e-2
     print(f"Executing implicit simulation with dt = {dt}")
@@ -632,7 +632,7 @@ def main():
 
 
     print("---------------------------------------------------------------")
-    """
+    
     print("---------------------------------------------------------------")
     print("Testing multiple P")
     dt = 1e-2

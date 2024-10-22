@@ -4,6 +4,7 @@
 
 \documentclass[letterpaper, 10 pt, conference]{ieeeconf}  % Comment this line out if you need a4paper
 \usepackage{amstext}
+\usepackage{amsfonts}
 \usepackage{float}
 \usepackage{graphicx}
 %\documentclass[a4paper, 10pt, conference]{ieeeconf}      % Use this line for a4 paper
@@ -114,20 +115,54 @@ where $E^S_1$ and $E^S_2$ are the stretching energies of the beam on the left an
 
 
 Using these variables, we may write our equations of motion for each sphere in the system:
+\begin{center}
+        $m_1\ddot{x_1} = -(6 \pi \mu R_1)\dot{x_1}-\frac{\partial E^{\text{Elastic}}}{\partial x_1}$ \\
+        $m_1\ddot{y_1} = -W_1 -(6 \pi \mu R_1)\dot{y_1}-\frac{\partial E^{\text{Elastic}}}{\partial y_1}$ \\
+        
+        $m_2\ddot{x_2} = -(6 \pi \mu R_2)\dot{x_2}-\frac{\partial E^{\text{Elastic}}}{\partial x_2}$ \\
+        $m_2\ddot{y_2} = -W_2 -(6 \pi \mu R_2)\dot{y_2}-\frac{\partial E^{\text{Elastic}}}{\partial y_2}$ \\
+        
+        $m_3\ddot{x_3} = -(6 \pi \mu R_3)\dot{x_3}-\frac{\partial E^{\text{Elastic}}}{\partial x_3}$ \\
+        $m_3\ddot{y_3} = -W_3 -(6 \pi \mu R_3)\dot{y_3}-\frac{\partial E^{\text{Elastic}}}{\partial y_3}$ \\
+\end{center}
+        
 
-(TODO: Write the 6 equations we used)
 
 And the discretized equations of motion for the beam are given by the following equations:
+\begin{center}
+$f_1 = \frac{m_1}{\Delta t} \left[\frac{x_1(t_{k+1}) - x_1(t_k)}{\Delta t} - \dot{x_1}(t_k)\right] + (6 \pi \mu R_1)\frac{x_1(t_{k+1}) - x_1(t_k)}{\Delta t} + \frac{\partial E^{\text{Elastic}}}{\partial x_1} = 0$ \\
+$f_2 = \frac{m_1}{\Delta t} \left[\frac{y_1(t_{k+1}) - y_1(t_k)}{\Delta t} - \dot{y_1}(t_k)\right] + (6 \pi \mu R_1)\frac{y_1(t_{k+1}) - y_1(t_k)}{\Delta t} + \frac{\partial E^{\text{Elastic}}}{\partial y_1} + W_1 = 0$ \\
 
-(TODO: write the discretized version of the equations we used)
+$f_3 = \frac{m_2}{\Delta t} \left[\frac{x_2(t_{k+1}) - x_2(t_k)}{\Delta t} - \dot{x_2}(t_k)\right] + (6 \pi \mu R_2)\frac{x_2(t_{k+1}) - x_2(t_k)}{\Delta t} + \frac{\partial E^{\text{Elastic}}}{\partial x_2} = 0$ \\
+$f_4 = \frac{m_2}{\Delta t} \left[\frac{y_2(t_{k+1}) - y_2(t_k)}{\Delta t} - \dot{y_2}(t_k)\right] + (6 \pi \mu R_2)\frac{y_2(t_{k+1}) - y_2(t_k)}{\Delta t} + \frac{\partial E^{\text{Elastic}}}{\partial y_2} + W_2 = 0$ \\
 
-In the explicit method, I replace the velocity term used in the damping force with the old velocity at $t_k$. This makes the integration method less coupled and easier to work with.
+$f_5 = \frac{m_3}{\Delta t} \left[\frac{x_3(t_{k+1}) - x_3(t_k)}{\Delta t} - \dot{x_3}(t_k)\right] + (6 \pi \mu R_3)\frac{x_3(t_{k+1}) - x_3(t_k)}{\Delta t} + \frac{\partial E^{\text{Elastic}}}{\partial x_3} = 0$ \\
+$f_6 = \frac{m_3}{\Delta t} \left[\frac{y_3(t_{k+1}) - y_3(t_k)}{\Delta t} - \dot{y_3}(t_k)\right] + (6 \pi \mu R_3)\frac{y_3(t_{k+1}) - y_3(t_k)}{\Delta t} + \frac{\partial E^{\text{Elastic}}}{\partial y_3} + W_3  = 0$
+\end{center}
 
-(TODO: just copy the equations)
+In the explicit method, I replaced the velocity term used in the damping force with the old velocity at $t_k$. This makes the integration method less coupled and easier to work with. So for $R_2$, the equation of motion is given by the following equation:
+\begin{center}
+$f_3 = \frac{m_2}{\Delta t} \left[\frac{x_2(t_{k+1}) - x_2(t_k)}{\Delta t} - \dot{x_2}(t_k)\right] + (6 \pi \mu R_2)\dot{x_2}(t_k)  $\\$ + \frac{\partial E^{\text{Elastic}}}{\partial x_2} = 0$ \\
+$f_4 = \frac{m_2}{\Delta t} \left[\frac{y_2(t_{k+1}) - y_2(t_k)}{\Delta t} - \dot{y_2}(t_k)\right] + W_2 + (6 \pi \mu R_2)\dot{x_2}(t_k) $\\$ + \frac{\partial E^{\text{Elastic}}}{\partial y_2} = 0$ \\
+
+\end{center}
+
 
 In the implicit method, I use the following Jacobian matrix to input into the Newton-Raphson method:
 
-(TODO: insert how we calculate the Jacobian matrix here)
+To evaluate the Jacobian matrix, we use the following formula:
+
+\begin{center}
+
+        $ \mathbb{J}_{ij} = \frac{\partial f_i}{ \partial q_j} = \frac{m_i}{\Delta t^2} + \frac{(6 \pi \mu R_i)}{\Delta t} + \frac{\partial^2 E^{\text{Elastic}}}{\partial q_i \partial q_j }$ 
+        $\text{where}$ \\
+
+        $\frac{\partial^2 E^{\text{Elastic}}}{\partial q_i \partial q_j} = \frac{\partial^2 E^1_s}{\partial q_i \partial q_j} + \frac{\partial^2 E^2_s}{\partial q_i \partial q_j} + \frac{\partial^2 E^b}{\partial q_i \partial q_j} \text{  for  } i = 1, 2, 3 \text{  and  } j = 1, 2, 3$
+        
+\end{center}
+Note that the weight $W_i$ is a constant, thus getting zeroed out in the partial derivatives. Also note that the stretching force (and thus, the gradient and hessian of the elastic energies) only depends on the nodes that the edge connects. Thus, the format of each stretching force is zeroed out except for the 4 DOFs the associated springs are attached to. For each equation of motion, we thus have to calculate the stretching force due to the two springs the node is attached to (one if the node is on an end).
+
+So in our 3 sphere system, the bending energy contributes to all values in the Jacobian matrix, $E^S_1$ contributes to the 4 by 4 quartile of starting from the top left, and $E^S_2$ contributes to the 4 by 4 quartile starting from the bottom right.
 
 Now we may answer the questions posed in the assignment:
 
@@ -260,6 +295,17 @@ In the general case of the elastic beam falling, we have $N = 21$ spheres. We us
         $E^{\text{Elastic}} = \sum\limits_{j=1}^{N-1} E^S_j + \sum\limits_{j=1}^{N-1} E^b_j $
 \end{center}
 
+and the Jacobian matrix is given by the following equation:
+
+\begin{center}
+
+        $ \mathbb{J}_{ij} = \frac{\partial f_i}{ \partial q_j} = \frac{m_i}{\Delta t^2} + \frac{(6 \pi \mu R_i)}{\Delta t} + \frac{\partial^2 E^{\text{Elastic}}}{\partial q_i \partial q_j }$ 
+        $\text{where}$ \\
+
+        $\frac{\partial^2 E^{\text{Elastic}}}{\partial q_i \partial q_j} = \sum\limits_{k=1}^{N-1} \frac{\partial^2 E^k_s}{\partial q_i \partial q_j} + \frac{\partial^2 E^b}{\partial q_i \partial q_j} \text{  for  } i = 1, \dots, {N-1} \text{  and  } j = 1, \dots, {N-1}$
+        
+\end{center}
+
 where $E^S_j$ and $E^b_j$ are the stretching and bending energies of the beam at the $j$th node, respectively. The forces are calculated in such a way that each edge only concerns itself with the nodes it is connected to. The equations of motion for the beam remain the same, just generalized for multiple nodes.
 
 \subsection*{Q1: Plot of position and velocity of middle node as a function of time}
@@ -337,7 +383,7 @@ The plot is shown in Fig. \ref{"fig:p3q1_max_vert"}. We see that the graph of  $
         \label{"fig:p3q1_beam2000"}
 \end{figure}
 
-\subsection{Q2: What is the benefit of the simulation over the predictions of the Euler Beam Theory?}
+\subsection*{Q2: What is the benefit of the simulation over the predictions of the Euler Beam Theory?}
 
 Comparing our results for $P = 20000$, the Euler Beam Theory predicts $y_{\text{theo}} = -0.38044915$, while our simulation predicts $y_{\text{sim}} = -0.23525626$. The error is now 0.15, which is much larger than the error for $P = 2000$. This is because the Euler Beam Theory is only accurate for small deflections and our point load is too large.
 
