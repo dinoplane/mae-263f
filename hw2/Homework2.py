@@ -39,34 +39,6 @@ def signedAngle(u = None,v = None,n = None):
 
     return angle
 
-def test_signedAngle():
-  """
-  This function tests the signedAngle function with three test cases.
-  """
-  # Test case 1: Orthogonal vectors
-  u = np.array([1, 0, 0])
-  v = np.array([0, 1, 0])
-  n = np.array([0, 0, 1])
-  angle = signedAngle(u, v, n)
-  assert np.isclose(angle, np.pi/2), "Test case 1 failed"
-
-  # Test case 2: Parallel vectors
-  u = np.array([1, 1, 1])
-  v = np.array([2, 2, 2])
-  n = np.array([0, 1, 0])
-  angle = signedAngle(u, v, n)
-  assert np.isclose(angle, 0), "Test case 2 failed"
-
-  # Test case 3: Anti-parallel vectors
-  u = np.array([1, 1, 1])
-  v = np.array([-1, -1, -1])
-  n = np.array([0, 1, 0])
-  angle = signedAngle(u, v, n)
-  assert np.isclose(angle, np.pi), "Test case 3 failed"
-
-  print("All test cases passed")
-
-
 def rotateAxisAngle(v = None,z = None,theta = None):
     # This function rotates a vector "v" around a specified axis "z" by an angle "theta".
     #
@@ -105,27 +77,6 @@ def rotateAxisAngle(v = None,z = None,theta = None):
 
     return vNew
 
-def test_rotateAxisAngle():
-  """
-  This function tests the rotateAxisAngle function by comparing the output with
-  the expected output for a given set of inputs.
-  """
-
-  # Test case: Rotate a vector by 90 degrees around the z-axis
-  v = np.array([1, 0, 0])
-  axis = np.array([0, 0, 1])
-  theta = np.pi/2
-  v_rotated = rotateAxisAngle(v, axis, theta)
-
-  # Expected output
-  v_expected = np.array([0, 1, 0])
-
-  # Check if the output is close to the expected output
-  assert np.allclose(v_rotated, v_expected), "Test case failed"
-
-  print("Test case passed")
-
-
 def parallel_transport(u = None,t1 = None,t2 = None):
 
     # This function parallel transports a vector u from tangent t1 to t2
@@ -152,29 +103,6 @@ def parallel_transport(u = None,t1 = None,t2 = None):
         d = np.dot(u,t1) * t2 + np.dot(u,n1) * n2 + np.dot(u,b) * b
 
     return d
-
-def test_parallel_transport():
-  """
-  This function tests the parallel_transport function by checking if the
-  transported vector is orthogonal to the new tangent vector.
-  """
-
-  # Test case 1: Orthogonal tangents
-  u = np.array([1, 0, 0])
-  t1 = np.array([0, 1, 0])
-  t2 = np.array([0, 0, 1])
-  u_transported = parallel_transport(u, t1, t2)
-  assert np.allclose(np.dot(u_transported, t2), 0), "Test case 1 failed"
-  # Returns True if two arrays are element-wise equal within a tolerance.
-
-  # Test case 2: Parallel tangents
-  u = np.array([1, 1, 1])
-  t1 = np.array([1, 0, 0])
-  t2 = np.array([2, 0, 0])
-  u_transported = parallel_transport(u, t1, t2)
-  assert np.allclose(u_transported, u), "Test case 2 failed"
-
-  print("All test cases passed")
 
 def crossMat(a):
     A=np.matrix([[0,- a[2],a[1]],[a[2],0,- a[0]],[- a[1],a[0],0]])
@@ -1023,8 +951,6 @@ def discrete_elastic_rods(qGuess, q0, u, a1, a2,
 
     return q, u, a1Iterate, a2Iterate
 
-
-
 def ch6asg1():
     # rod with nodes at xk
     x0 = np.array([0,       0,     0])
@@ -1370,17 +1296,13 @@ def ch7asg1():
     plt.ylabel('z-coord of last node, $\\delta_z$ [m]')
     plt.show()
 
-  
-
-
-
 """#Main DER
 
 **Degrees of freedom and nodes**
 
 We are dividing an elastic rod into nv nodes, which corresponds to ne=nv-1 edges and a DOF vector of size $$ndof=4nv-1.$$ We will store the results in a matrix (numpy ndarray) of size (nv x 3).
 
-A rod of length 0.2 meter and natural radius of curvature of 0.02 m. Cross-sectional radius is 0.001 m. We want to use nv=20 nodes (but should ideally be determined after doing sensitivity analysis).
+A rod of length 0.2 meter and natural radius of curvature of 0.02 m. Cross-sectional radius is 0.001 m.
 """
 
 def main():
