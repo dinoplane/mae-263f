@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex proposal"] 1730633705.03735 "proposal.aux" "proposal.bbl" "proposal" 1730633706.33778 0
+["bibtex proposal"] 1730634490.12185 "proposal.aux" "proposal.bbl" "proposal" 1730634534.81828 0
   "./refs.bib" 1730633704 8513 41110019b32486307a7944acd501dace ""
   "c:/texlive/2024/texmf-dist/bibtex/bst/base/ieeetr.bst" 1729235124 18361 1a00e58565e7f19bf2b3e1bfb82254ae ""
-  "proposal.aux" 1730633705 1385 34b6c046075ce604121a02082ef2db3a "pdflatex"
+  "proposal.aux" 1730634534 1385 34b6c046075ce604121a02082ef2db3a "pdflatex"
   (generated)
   "proposal.bbl"
   "proposal.blg"
   (rewritten before read)
-["pdflatex"] 1730633705.26824 "c:/Users/Alien/Documents/mae-263f/proposal/proposal_report/proposal.tex" "proposal.pdf" "proposal" 1730633706.33812 0
-  "c:/Users/Alien/Documents/mae-263f/proposal/proposal_report/proposal.tex" 1730633428 13961 fbb87ace56f960d361297b1f44e59e89 ""
+["pdflatex"] 1730634533.72671 "c:/Users/Alien/Documents/mae-263f/proposal/proposal_report/proposal.tex" "proposal.pdf" "proposal" 1730634534.81861 0
+  "c:/Users/Alien/Documents/mae-263f/proposal/proposal_report/proposal.tex" 1730634533 14004 e8d4790142d310667e31652dd7083e70 ""
   "c:/texlive/2024/texmf-dist/fonts/enc/dvips/base/8r.enc" 1729236109 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "c:/texlive/2024/texmf-dist/fonts/map/fontname/texfonts.map" 1729236646 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive/2024/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm" 1729245016 2172 fd0c924230362ff848a33632ed45dc23 ""
@@ -71,9 +71,10 @@
   "c:/texlive/2024/texmf.cnf" 1729245717 713 e69b156964470283e0530f5060668171 ""
   "fumo.png" 1730629235 269913 61bbe855b92ff37bce4f09c870b96fd2 ""
   "ieeeconf.cls" 1729233552 202167 c8a8a2004c9762153e255667fc17d954 ""
-  "proposal.aux" 1730633705 1385 34b6c046075ce604121a02082ef2db3a "pdflatex"
-  "proposal.bbl" 1730633705 1609 d00f8e064d7937673713683128c8bbb7 "bibtex proposal"
-  "proposal.tex" 1730633428 13961 fbb87ace56f960d361297b1f44e59e89 ""
+  "output.png" 1730634467 43006 128e2adf3b3f403a9418947bfd22f9de ""
+  "proposal.aux" 1730634534 1385 34b6c046075ce604121a02082ef2db3a "pdflatex"
+  "proposal.bbl" 1730634490 1609 d00f8e064d7937673713683128c8bbb7 "bibtex proposal"
+  "proposal.tex" 1730634533 14004 e8d4790142d310667e31652dd7083e70 ""
   (generated)
   "proposal.aux"
   "proposal.log"
