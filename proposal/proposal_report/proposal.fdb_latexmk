@@ -1,7 +1,7 @@
 # Fdb version 4
-["pdflatex"] 1730578952.27362 "/home/alien/Documents/mae-263f/proposal/proposal_report/proposal.tex" "proposal.pdf" "proposal" 1730578952.61047 0
+["pdflatex"] 1730604775.00111 "/home/alien/Documents/mae-263f/proposal/proposal_report/proposal.tex" "proposal.pdf" "proposal" 1730604775.37303 0
   "/etc/texmf/web2c/texmf.cnf" 1729056938.14318 475 c0e671620eb5563b2130f56340a5fde8 ""
-  "/home/alien/Documents/mae-263f/proposal/proposal_report/proposal.tex" 1730578951.60122 12850 7ad155b96f408c74c5e95b2307af2cf0 ""
+  "/home/alien/Documents/mae-263f/proposal/proposal_report/proposal.tex" 1730604774.73865 12849 a78604edd4653a29429180f71f02846b ""
   "/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc" 1165713224 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/usr/share/texlive/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/usr/share/texlive/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm" 1136768653 2172 fd0c924230362ff848a33632ed45dc23 ""
@@ -66,8 +66,8 @@
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1729060250 6831126 e2ebaba8aa89a1fce933836bd8583bc7 ""
   "ieeeconf.cls" 1730575419.71172 197574 c8a8a2004c9762153e255667fc17d954 ""
   "last_node.png" 1730575419.71172 27524 036c96a5b2882b0960bf54dfc58e4cf2 ""
-  "proposal.aux" 1730578952.55919 476 2c14b73d28cfba2480a7217f1c28dc5c "pdflatex"
-  "proposal.tex" 1730578951.60122 12850 7ad155b96f408c74c5e95b2307af2cf0 ""
+  "proposal.aux" 1730604775.29363 476 2c14b73d28cfba2480a7217f1c28dc5c "pdflatex"
+  "proposal.tex" 1730604774.73865 12849 a78604edd4653a29429180f71f02846b ""
   (generated)
   "proposal.aux"
   "proposal.log"
