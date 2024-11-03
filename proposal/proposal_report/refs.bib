@@ -1,0 +1,128 @@
+@inproceedings{provot1995deformation,
+  title={Deformation constraints in a mass-spring model to describe rigid cloth behaviour},
+  author={Provot, Xavier and others},
+  year={1995}
+
+}
+
+@article{weil1986synthesis,
+  title={The synthesis of cloth objects},
+  author={Weil, Jerry},
+  journal={ACM Siggraph Computer Graphics},
+  volume={20},
+  number={4},
+  pages={49--54},
+  year={1986},
+  publisher={ACM New York, NY, USA}
+}
+
+@inbook{baraff1998large,
+author = {Baraff, David and Witkin, Andrew},
+title = {Large Steps in Cloth Simulation},
+year = {2023},
+isbn = {9798400708978},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+edition = {1},
+url = {https://doi.org/10.1145/3596711.3596792},
+abstract = {The bottle-neck in most cloth simulation systems is that time steps must be small to avoid numerical instability. This paper describes a cloth simulation system that can stably take large time steps. The simulation systemcouples a new technique for enforcing constraints on individual cloth particles with an implicit integration method. The simulator models cloth as a triangular mesh, with internal cloth forces derived using a simple continuum formulation that supports modeling operations such as local anisotropic stretch or compression; a unified treatment of damping forces is included as well. The implicit integration method generates a large, unbanded sparse linear system at each time step which is solved using a modified conjugate gradient method that simultaneously enforces particles' constraints. The constraints are always maintained exactly, independent of the number of conjugate gradient iterations, which is typically small. The resulting simulation system is significantly faster than previous accounts of cloth simulation systems in the literature.},
+booktitle = {Seminal Graphics Papers: Pushing the Boundaries, Volume 2},
+articleno = {80},
+numpages = {12}
+}
+
+@incollection{oh2018hierarchical,
+  title={Hierarchical cloth simulation using deep neural networks},
+  author={Oh, Young Jin and Lee, Tae Min and Lee, In-Kwon},
+  booktitle={Proceedings of Computer Graphics International 2018},
+  pages={139--146},
+  year={2018},
+  publisher = {Association for Computing Machinery}
+}
+
+@article{bertiche2022neural,
+author = {Bertiche, Hugo and Madadi, Meysam and Escalera, Sergio},
+title = {Neural Cloth Simulation},
+year = {2022},
+issue_date = {December 2022},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {41},
+number = {6},
+issn = {0730-0301},
+url = {https://doi.org/10.1145/3550454.3555491},
+doi = {10.1145/3550454.3555491},
+abstract = {We present a general framework for the garment animation problem through unsupervised deep learning inspired in physically based simulation. Existing trends in the literature already explore this possibility. Nonetheless, these approaches do not handle cloth dynamics. Here, we propose the first methodology able to learn realistic cloth dynamics unsupervisedly, and henceforth, a general formulation for neural cloth simulation. The key to achieve this is to adapt an existing optimization scheme for motion from simulation based methodologies to deep learning. Then, analyzing the nature of the problem, we devise an architecture able to automatically disentangle static and dynamic cloth subspaces by design. We will show how this improves model performance. Additionally, this opens the possibility of a novel motion augmentation technique that greatly improves generalization. Finally, we show it also allows to control the level of motion in the predictions. This is a useful, never seen before, tool for artists. We provide of detailed analysis of the problem to establish the bases of neural cloth simulation and guide future research into the specifics of this domain.},
+journal = {ACM Trans. Graph.},
+month = nov,
+articleno = {220},
+numpages = {14},
+keywords = {cloth, deep learning, disentangle, dynamics, neural network, simulation, unsupervised}
+}
+
+@article{terzopoulos1987elastically,
+author = {Terzopoulos, Demetri and Platt, John and Barr, Alan and Fleischer, Kurt},
+title = {Elastically deformable models},
+year = {1987},
+issue_date = {July 1987},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {21},
+number = {4},
+issn = {0097-8930},
+url = {https://doi.org/10.1145/37402.37427},
+doi = {10.1145/37402.37427},
+abstract = {The theory of elasticity describes deformable materials such as rubber, cloth, paper, and flexible metals. We employ elasticity theory to construct differential equations that model the behavior of non-rigid curves, surfaces, and solids as a function of time. Elastically deformable models are active: they respond in a natural way to applied forces, constraints, ambient media, and impenetrable obstacles. The models are fundamentally dynamic and realistic animation is created by numerically solving their underlying differential equations. Thus, the description of shape and the description of motion are unified.},
+journal = {SIGGRAPH Comput. Graph.},
+month = aug,
+pages = {205–214},
+numpages = {10}
+}
+
+
+@article{Tamstorf2013discrete,
+author = {Tamstorf, Rasmus and Grinspun, Eitan},
+title = {Discrete bending forces and their Jacobians},
+year = {2013},
+issue_date = {November, 2013},
+publisher = {Academic Press Professional, Inc.},
+address = {USA},
+volume = {75},
+number = {6},
+issn = {1524-0703},
+url = {https://doi.org/10.1016/j.gmod.2013.07.001},
+doi = {10.1016/j.gmod.2013.07.001},
+abstract = {Computation of bending forces on triangle meshes is required for numerous simulation and geometry processing applications. In particular it is a key component in cloth simulation. A common quantity in many bending models is the hinge angle between two adjacent triangles. This angle is straightforward to compute, and its gradient with respect to vertex positions (required for the forces) is easily found in the literature. However, the Hessian of the bend angle, which is required to compute the associated force Jacobians is not documented in the literature. Force Jacobians are required for efficient numerics (e.g., implicit time stepping, Newton-based energy minimization) and are thus highly desirable. Readily available computations of the force Jacobian, such as those produced by symbolic algebra systems, or by autodifferentiation codes, are expensive to compute and therefore less useful. We present compact, easily reproducible, closed form expressions for the Hessian of the bend angle. Compared to automatic differentiation, we measure up to 7x speedup for the evaluation of the bending forces and their Jacobians.},
+journal = {Graph. Models},
+month = nov,
+pages = {362–370},
+numpages = {9},
+keywords = {Bending force Jacobians, Dihedral angle, Discrete shells, Hinge angle Hessian}
+}
+
+@article{bolz2003sparse,
+author = {Bolz, Jeff and Farmer, Ian and Grinspun, Eitan and Schr\"{o}der, Peter},
+title = {Sparse matrix solvers on the GPU: conjugate gradients and multigrid},
+year = {2003},
+issue_date = {July 2003},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+volume = {22},
+number = {3},
+issn = {0730-0301},
+url = {https://doi.org/10.1145/882262.882364},
+doi = {10.1145/882262.882364},
+abstract = {Many computer graphics applications require high-intensity numerical simulation. We show that such computations can be performed efficiently on the GPU, which we regard as a full function streaming processor with high floating-point performance. We implemented two basic, broadly useful, computational kernels: a sparse matrix conjugate gradient solver and a regular-grid multigrid solver. Real time applications ranging from mesh smoothing and parameterization to fluid solvers and solid mechanics can greatly benefit from these, evidence our example applications of geometric flow and fluid simulation running on NVIDIA's GeForce FX.},
+journal = {ACM Trans. Graph.},
+month = jul,
+pages = {917–924},
+numpages = {8},
+keywords = {GPU computing, Navier-Stokes, conjugate gradient, fluid simulation, mesh smoothing, multigrid, numerical simulation}
+}
+
+@misc{Fisher, title={Matt's webcorner}, 
+url={https://graphics.stanford.edu/~mdfisher/cloth.html}, journal={Matt’s Webcorner - Cloth}, author={Fisher, Matthew},
+year={2014},
+note = {Available at {https://graphics.stanford.edu/~mdfisher/cloth.html}}
+} 
+

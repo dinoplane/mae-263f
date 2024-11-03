@@ -1,0 +1,32 @@
+\begin{thebibliography}{1}
+
+\bibitem{weil1986synthesis}
+J.~Weil, ``The synthesis of cloth objects,'' {\em ACM Siggraph Computer Graphics}, vol.~20, no.~4, pp.~49--54, 1986.
+
+\bibitem{provot1995deformation}
+X.~Provot {\em et~al.}, ``Deformation constraints in a mass-spring model to describe rigid cloth behaviour,'' 1995.
+
+\bibitem{terzopoulos1987elastically}
+D.~Terzopoulos, J.~Platt, A.~Barr, and K.~Fleischer, ``Elastically deformable models,'' {\em SIGGRAPH Comput. Graph.}, vol.~21, p.~205–214, Aug. 1987.
+
+\bibitem{baraff1998large}
+D.~Baraff and A.~Witkin, {\em Large Steps in Cloth Simulation}.
+\newblock New York, NY, USA: Association for Computing Machinery, 1~ed., 2023.
+
+\bibitem{oh2018hierarchical}
+Y.~J. Oh, T.~M. Lee, and I.-K. Lee, ``Hierarchical cloth simulation using deep neural networks,'' in {\em Proceedings of Computer Graphics International 2018}, pp.~139--146, Association for Computing Machinery, 2018.
+
+\bibitem{bertiche2022neural}
+H.~Bertiche, M.~Madadi, and S.~Escalera, ``Neural cloth simulation,'' {\em ACM Trans. Graph.}, vol.~41, Nov. 2022.
+
+\bibitem{bolz2003sparse}
+J.~Bolz, I.~Farmer, E.~Grinspun, and P.~Schr\"{o}der, ``Sparse matrix solvers on the gpu: conjugate gradients and multigrid,'' {\em ACM Trans. Graph.}, vol.~22, p.~917–924, July 2003.
+
+\bibitem{Tamstorf2013discrete}
+R.~Tamstorf and E.~Grinspun, ``Discrete bending forces and their jacobians,'' {\em Graph. Models}, vol.~75, p.~362–370, Nov. 2013.
+
+\bibitem{Fisher}
+M.~Fisher, ``Matt's webcorner,'' 2014.
+\newblock Available at {https://graphics.stanford.edu/~mdfisher/cloth.html}.
+
+\end{thebibliography}
