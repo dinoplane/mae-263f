@@ -1,0 +1,20 @@
+\begin{thebibliography}{1}
+
+\bibitem{baraff1998large}
+D.~Baraff and A.~Witkin, {\em Large Steps in Cloth Simulation}.
+\newblock New York, NY, USA: Association for Computing Machinery, 1~ed., 1998.
+
+\bibitem{Grinspun2003discrete}
+E.~Grinspun, A.~N. Hirani, M.~Desbrun, and P.~Schr\"{o}der, ``Discrete shells,'' in {\em Proceedings of the 2003 ACM SIGGRAPH/Eurographics Symposium on Computer Animation}, SCA '03, (Goslar, DEU), p.~62–67, Eurographics Association, 2003.
+
+\bibitem{Tamstorf2013discrete}
+R.~Tamstorf and E.~Grinspun, ``Discrete bending forces and their jacobians,'' {\em Graph. Models}, vol.~75, p.~362–370, Nov. 2013.
+
+\bibitem{SCHENK200169}
+O.~Schenk, K.~Gärtner, W.~Fichtner, and A.~Stricker, ``Pardiso: a high-performance serial and parallel sparse linear solver in semiconductor device simulation,'' {\em Future Generation Computer Systems}, vol.~18, no.~1, pp.~69--78, 2001.
+\newblock I. High Performance Numerical Methods and Applications. II. Performance Data Mining: Automated Diagnosis, Adaption, and Optimization.
+
+\bibitem{bolz2003sparse}
+J.~Bolz, I.~Farmer, E.~Grinspun, and P.~Schr\"{o}der, ``Sparse matrix solvers on the gpu: conjugate gradients and multigrid,'' {\em ACM Trans. Graph.}, vol.~22, p.~917–924, July 2003.
+
+\end{thebibliography}

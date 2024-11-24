@@ -100,6 +100,23 @@ numpages = {9},
 keywords = {Bending force Jacobians, Dihedral angle, Discrete shells, Hinge angle Hessian}
 }
 
+@inproceedings{Grinspun2003discrete,
+author = {Grinspun, Eitan and Hirani, Anil N. and Desbrun, Mathieu and Schr\"{o}der, Peter},
+title = {Discrete shells},
+year = {2003},
+isbn = {1581136595},
+publisher = {Eurographics Association},
+address = {Goslar, DEU},
+abstract = {In this paper we introduce a discrete shell model describing the behavior of thin flexible structures, such as hats, leaves, and aluminum cans, which are characterized by a curved undeformed configuration. Previously such models required complex continuum mechanics formulations and correspondingly complex algorithms. We show that a simple shell model can be derived geometrically for triangle meshes and implemented quickly by modifying a standard cloth simulator. Our technique convincingly simulates a variety of curved objects with materials ranging from paper to metal, as we demonstrate with several examples including a comparison of a real and simulated falling hat.},
+booktitle = {Proceedings of the 2003 ACM SIGGRAPH/Eurographics Symposium on Computer Animation},
+pages = {62–67},
+numpages = {6},
+location = {San Diego, California},
+series = {SCA '03}
+}
+
+  
+
 @article{bolz2003sparse,
 author = {Bolz, Jeff and Farmer, Ian and Grinspun, Eitan and Schr\"{o}der, Peter},
 title = {Sparse matrix solvers on the GPU: conjugate gradients and multigrid},
@@ -126,3 +143,18 @@ year={2014},
 note = {Available at {https://graphics.stanford.edu/~mdfisher/cloth.html}}
 } 
 
+@article{SCHENK200169,
+title = {PARDISO: a high-performance serial and parallel sparse linear solver in semiconductor device simulation},
+journal = {Future Generation Computer Systems},
+volume = {18},
+number = {1},
+pages = {69-78},
+year = {2001},
+note = {I. High Performance Numerical Methods and Applications. II. Performance Data Mining: Automated Diagnosis, Adaption, and Optimization},
+issn = {0167-739X},
+doi = {https://doi.org/10.1016/S0167-739X(00)00076-5},
+url = {https://www.sciencedirect.com/science/article/pii/S0167739X00000765},
+author = {Olaf Schenk and Klaus Gärtner and Wolfgang Fichtner and Andreas Stricker},
+keywords = {Parallel sparse  factorization, Pipelining parallelism, Semiconductor device simulation},
+abstract = {The package PARDISO is a high-performance, robust and easy to use software for solving large sparse symmetric or structurally symmetric linear systems of equations on shared memory multiprocessors. PARDISO uses a combination of left-and right-looking Level-3 BLAS supernode techniques to exploit pipelining parallelism. It delivers up to 960Mflop/s on COMPAQ Alpha ES40 (667MHz) for irregular problems and sparse matrix factorization has been clocked up at a speedup of 7 on an 8-node SGI Origin 2000. The paper gives an overview of the algorithm, performance results and the integration of the solver into complex industrial simulation tools. Finally, an example is discussed inherently (due to the design goal) producing linear systems close to singularity.}
+}

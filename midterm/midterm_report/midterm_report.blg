@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2024)
+Capacity: max_strings=200000, hash_size=200000, hash_prime=170003
+The top-level auxiliary file: midterm_report.aux
+The style file: ieeetr.bst
+Database file #1: refs.bib
+Warning--empty chapter and pages in baraff1998large
+You've used 5 entries,
+            1876 wiz_defined-function locations,
+            520 strings with 4682 characters,
+and the built_in function-call counts, 1611 in all, are:
+= -- 168
+> -- 58
+< -- 0
++ -- 21
+- -- 16
+* -- 97
+:= -- 210
+add.period$ -- 7
+call.type$ -- 5
+change.case$ -- 5
+chr.to.int$ -- 0
+cite$ -- 6
+duplicate$ -- 104
+empty$ -- 133
+format.name$ -- 16
+if$ -- 413
+int.to.chr$ -- 0
+int.to.str$ -- 5
+missing$ -- 6
+newline$ -- 20
+num.names$ -- 5
+pop$ -- 14
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 96
+stack$ -- 0
+substring$ -- 70
+swap$ -- 61
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 1
+while$ -- 10
+width$ -- 6
+write$ -- 57
+(There was 1 warning)
