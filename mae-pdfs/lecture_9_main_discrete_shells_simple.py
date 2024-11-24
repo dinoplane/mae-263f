@@ -13,9 +13,11 @@ You should use this code at your own risk.
 #Load Libraries
 """
 
-from IPython.display import clear_output
+# from IPython.display import clear_output
 import numpy as np
 import matplotlib.pyplot as plt
+import sys
+
 
 """#Miscellaneous Functions: signedAngle, rotateAxisAngle, parallel_transport, crossMat"""
 
@@ -382,7 +384,7 @@ def plotShell(x0, ctime):
   x0 = x0[0:3]
 
   fig = plt.figure(1)
-  clear_output()
+  # clear_output()
   plt.clf()  # Clear the figure
   ax = fig.add_subplot(111, projection='3d')
 
@@ -440,7 +442,7 @@ def objfun(qGuess, q0, u, freeIndex, dt, tol,
              3*node1, 3*node1 + 1, 3*node1 + 2,
              3*node2, 3*node2 + 1, 3*node2 + 2,
              3*node3, 3*node3 + 1, 3*node3 + 2]
-      dF, dJ = gradEb_hessEb_Shell(x0, x1, x2, x3, thetaBar, kb)
+      dF, dJ = gradEb_hessEb_Shell(x0, x1, x2, x3, thetaBar[kHinge], kb)
       Fb[ind] = Fb[ind] - dF
       Jb[np.ix_(ind,ind)] = Jb[np.ix_(ind,ind)] - dJ
 
@@ -474,9 +476,9 @@ def objfun(qGuess, q0, u, freeIndex, dt, tol,
     error = np.sum( np.abs(f_free) )
     iter += 1
 
-    print('Iter = %d' % iter)
-    print('Error = %f' % error)
-
+    # print('Iter = %d' % iter)
+    # print('Error = %f' % error)
+  print(q[freeIndex])
   u = (q - q0) / dt
 
   return q, u
@@ -489,21 +491,52 @@ We are dividing an elastic shell  into nv nodes, which corresponds to a DOF vect
 """
 
 # Inputs
-x0 = np.array([0.0, 0.0, 0.0])
-x1 = np.array([0.01, 0.0, 0.0])
-x2 = np.array([0.005, 0.01, 0.0])
-x3 = np.array([0.005, -0.01, 0.0])
 
-q0 = np.concatenate((x0, x1, x2, x3))
-plotShell(q0, 0.0)
 
-nv = 4 # Number of vertices
+# x1 = np.array([0.01, 0.0, 0.0])
+# x2 = np.array([0.005, 0.01, 0.0])
+# x3 = np.array([0.005, -0.01, 0.0])
+
+# edges = np.array([(0,1), (1,2), (0,2), (0,3), (1,3)])
+# hinges = np.array([(0,1,2,3)])
+
+
+# x0 = np.array([0.0, 0.0, 0.0]) 
+# x1 = np.array([0.1, 0.0, 0.0])
+# x2 = np.array([0.05, 0.0, -0.0866025388])
+# x3 = np.array([0.15, 0.0, -0.0866025388])
+
+
+# q0 = np.array([0.0, 0.0, 0.0, 0.1, 0.0, 0.0, 0.05, 0.0, -0.0866025388, 0.15, 0.0, -0.0866025388])
+# edges = np.array([(2, 1), (1, 0), (0, 2), (1, 3), (2, 3)])
+# hinges = np.array([(2, 1, 0, 3)])
+# nv = 4 # Number of vertices
+np.set_printoptions(formatter={'float': '{: .8e}'.format})
+
+
+
+q0 = np.array([ 0.00000000,  0.00000000,  0.00000000,  0.10000000,  0.00000000,  0.00000000,  0.20000000,  0.00000000,  0.00000000,  0.05000000,  0.00000000, -0.08660254,  0.15000000,  0.00000000, -0.08660254,  0.25000000,  0.00000000, -0.08660254,  0.00000000,  0.00000000, -0.17320508,  0.10000000,  0.00000000, -0.17320508,  0.20000000,  0.00000000, -0.17320508])
+edges = np.array([(3, 1), (1, 0), (0, 3), (4, 2), (2, 1), (1, 4), (2, 5), (3, 6), (7, 4), (4, 3), (3, 7), (8, 5), (5, 4), (4, 8), (6, 7), (7, 8)])
+hinges = np.array([(3, 1, 0, 4), (4, 2, 1, 5), (1, 4, 2, 3), (3, 7, 4, 6), (3, 4, 1, 7), (4, 8, 5, 7), (4, 7, 8, 3), (4, 5, 2, 8)])
+nv = q0.shape[0] // 3 # number of vertices
+
 ndof = 3 * nv # number of DOFs
+
+fixedIndex = np.arange(0,9)
+freeIndex = np.arange(9,ndof)
+
+orig_stdout = sys.stdout
+
+nv_side = int(np.sqrt(nv)) - 1
+filename = f"py{nv_side}.out.txt"
+f = open(filename, 'w')
+sys.stdout = f
 
 """**Create Edges and Hinges**"""
 
-edges = np.array([(0,1), (1,2), (0,2), (0,3), (1,3)])
-hinges = np.array([(0,1,2,3)])
+
+
+
 
 """**Elastic stiffness parameters**
 We will compute the elastic stiffness values
@@ -521,9 +554,9 @@ ks = np.zeros(edges.shape[0])
 for kEdge in range(edges.shape[0]):
   node0 = edges[kEdge,0] # node number
   node1 = edges[kEdge,1] # node numer
-  x0 = q0[3*node0:3*node0+3]
-  x1 = q0[3*node1:3*node1+3]
-  lk[kEdge] = np.linalg.norm(x1-x0)
+  n0 = q0[3*node0:3*node0+3]
+  n1 = q0[3*node1:3*node1+3]
+  lk[kEdge] = np.linalg.norm(n1-n0)
   ks[kEdge] = np.sqrt(3.0)/2.0 * Y * h * (lk[kEdge]) ** 2.0
 
 """**Time parameters**"""
@@ -547,7 +580,7 @@ mMat = np.diag(massVector)
 Since this does not change with time, we define it here instead of within the time loop.
 """
 
-g = np.array([0.0, 0.0, -9.81])
+g = np.array([0.0, -9.81, 0.0])
 Fg = np.zeros(ndof)
 for kNode in range(nv):
   Fg[3*kNode:3*kNode+3] = dm * g
@@ -559,14 +592,25 @@ u = np.zeros(ndof) # initial velocity
 
 """**Compute natural curvature (theta_bar)**"""
 
-thetaBar = getTheta(q0) # Just 0 for plates
+# ss = np.concatenate((x2, x1, x0, x3))
+# thetaBar = getTheta(ss) # Just 0 for plates
+thetaBar = np.zeros(hinges.shape[0])
+for kHinge in range(hinges.shape[0]):
+  node0 = hinges[kHinge,0]
+  node1 = hinges[kHinge,1]
+  node2 = hinges[kHinge,2]
+  node3 = hinges[kHinge,3]
+  x0 = q0[3*node0:3*node0+3]
+  x1 = q0[3*node1:3*node1+3]
+  x2 = q0[3*node2:3*node2+3]
+  x3 = q0[3*node3:3*node3+3]
+  thetaBar[kHinge] = getTheta(x0, x1, x2, x3)
 
 """**Set up boundary conditions**
 We define the fixed and free DOFs. If the simulation asks that the boundary conditions vary with time (e.g., someone is holding a rod and all on a sudden drops it), we have to define it later within the time stepping loop.
 """
 
-fixedIndex = np.arange(0,9)
-freeIndex = np.arange(9,ndof)
+# freeIndex = np.arange(9,ndof)
 
 """**Time stepping loop**"""
 
@@ -589,8 +633,11 @@ for timeStep in range(Nsteps):
   q0 = q.copy()
   endZ[timeStep] = q[-1] # Store z-coordinate of last node
 
-  if timeStep % 100 == 0:
-    plotShell(q, ctime)
+  # if timeStep % 100 == 0:
+  #   plotShell(q, ctime)
+
+sys.stdout = orig_stdout
+f.close()
 
 # Visualize
 plt.figure(2)

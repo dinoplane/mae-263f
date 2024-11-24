@@ -46,7 +46,7 @@ Homework 2 Report
 
 \begin{document}
 
-\onecolumn
+% \onecolumn
 
 
 \maketitle
@@ -58,164 +58,69 @@ Homework 2 Report
 
 \begin{abstract}
 
-In this homework, I reviewed the discrete elastic rod algorithm and the various preliminaries that lead to its derivation, with a focus on the computation of twist. 
+        In this midterm report, I present my current progress in the projects, the problems I encountered, and how I managed to mitigate each problem. I will also give an overview of what I plan to complete in the next coming weeks.
 
 \end{abstract}
-\section{Chapter 6: Discrete Twist}
-The following 3 questions involve the computation of twist for an arbitrary discrete rod. The first 2 questions involve the computation of a rod with $ N = 4 $ nodes at:
-\[ \mathbf{x}_1 = \begin{bmatrix} 0.00 & 0.00 & 0.00 \end{bmatrix} \quad \]
-\[ \mathbf{x}_2 = \begin{bmatrix} 0.50 & 0.00 & 0.00 \end{bmatrix} \quad \]
-\[ \mathbf{x}_3 = \begin{bmatrix} 0.75 & 0.25 & 0.00 \end{bmatrix} \quad \]
-\[ \mathbf{x}_4 = \begin{bmatrix} 0.75 & 0.50 & 0.25 \end{bmatrix} \quad \]
+\section{Overview}
 
+In my proposal, I mentioned I wanted to create a cloth simulation for my hobby project, AlienGLRenderer. This is essentially a C++ implementation of the DEP/S algorithm we gone over class. However, much emphasis was made on making sure the cloth simulation could run in real-time (online rendering). In the following sections, I will discuss the progress I have made so far, the problems I encountered, and what I plan to do in the next coming weeks.
 
-The rod has an adapted material frame and the first material directors \( \mathbf{m}_k^1 \) (with \( k = 1, \ldots, N-1 \)) are:
+\section{Progress}
+Currently, I have a working implementation of the cloth simulation in C++. I will discuss the key components of the simulation below:
 
+\subsection{Cloth Mesh Creation and Parameterization}
+The mesh of the cloth is represented as a equilateral triangluar grid of particles connected by edges / hinges. For now, I rendered them points connected by lines, highlighting the points that are fixed in the simulation. Other highlights present in the simulation are used for debug purposes only. The derivation of the points are all procedural and dependent on a user supplied number of edges of the cloth and the edge length. In addition, the user also specifies the young's modulus, the thickness, the gravitational pull, and the timestep of the simulation.
 
-\[\mathbf{m}_1^1 = \begin{bmatrix} 0.00 & 0.00 & 1.00 \end{bmatrix} \quad \]
-\[\mathbf{m}_2^1 = \begin{bmatrix} 0.00 & 0.00 & 1.00 \end{bmatrix} \quad \]
-\[\mathbf{m}_3^1 = \begin{bmatrix} 0.00 & -\frac{1}{\sqrt{2}} & \frac{1}{\sqrt{2}} \end{bmatrix} \quad \]
+\subsection{Cloth Simulation}
+The simulation is based on the DEP/S algorithm we went over in class. The simulation is implicit and is solved using the Newton-Raphson method. The forces acting on the cloth are the internal forces (stretching, bending, and shearing), the external forces (gravity), and the damping forces. The internal forces are calculated using the DEP algorithm, which is a generalization of the StVK model. The external forces are calculated using the gravitational pull and the damping forces are calculated using the velocity of the particles. The forces are calculated in the compute shader and the positions are updated in the update shader. The positions are updated using the implicit Euler method. The simulation is run until the accumulated error in the free forces is less than a certain tolerance.
 
-
-\subsection*{Q1: Compute the discrete integrated twist of this rod.}
-After initializing the node positions and material directors, we can compute the edge vectors to compute tangent vectors of each edge of the rod. This will be used in calculating the twist, where we parallel transport the material frame of the $(k -1)$-th edge to the $k$-th edge. The twist at the $k$-th edge is the signed angle of the vector we just obtained to the corresponding material frame director about the current tangent vector. With this method, we get the following twist values for the rod:
-\[ \tau_2 = 0 \ \text{at} \ \mathbf{x_2}\]
-\[\tau_3 = 0.34\ \text{at} \ \mathbf{x_3} \]
-
-\subsection*{Q2: Construct the space-parallel frame for the previous rod. Start with $u^1_1 = [0, 0, 1]$ at the first edge and use parallel transport to compute the 3 directors at subsequent edges. Evaluate the angle $ \nu ^ k (k = 1, \dots , N - 1)$ at each edge. Compute the twist. }
-
-We have now learned about the space-parallel reference frame and how to use it in computing twist. Like before, we compute the tangent vectors over the entire rod. We then compute the directors of the space-parallel reference frame of each edge by parallel transporting the director of the previous edge to the current edge. The twist can finally be calculated like before, by computing the signed angle between a space-parallel reference frame director and its corresponding material frame director about the current tangent vector at k. The twist values for the rod are the same as before:
-\[ \tau_2 = 0 \ \text{at} \ \mathbf{x_2}\]
-\[\tau_3 = 0.34\ \text{at} \ \mathbf{x_3} \]
-
-\subsection*{Q3: Given the node positions and twist angles at $t = 0, 0.05, \& 0.10$, compute the integrated discrete twist. Show your work. }
-
-We finally learned about the time-parallel reference frame and its use case in computing twist over time. Here we are given the following DOFs at $t = 0, 0.05, \& 0.10$ in the form $\mathbf{x_{k-1}}, \theta_{k-1}, \mathbf{x_k}, \theta_k, \mathbf{x_{k+1}}, \theta_{k+1}, \dots$:
-The given DOFs at different time steps are as follows:
-At \( t = 0 \):
-\[ q_0 = \begin{matrix}
-\Bigl[2.000e-02 & 0.000e+00 & 0.000e+00 & 0.000e+00 & 6.306e-03  \\
-1.898e-02 & 0.000e+00 & 0.000e+00 & -1.602e-02 & 1.197e-02  \\ 
-0.000e+00 & 0.000e+00 & -1.641e-02 & -1.143e-02 & 0.000e+00 \\
-0.000e+00 & 5.673e-03 & -1.918e-02 & 0.000e+00\Bigr]
-\end{matrix} \]
-
-At \( t = 0.05 \):
-\[ q_1 = \begin{matrix}
-\Bigl[ 2.000e-02 & 0.000e+00 & 0.000e+00 & 0.000e+00 & 6.306e-03 \\
-1.898e-02 & 0.000e+00 & -2.006e-01 & -1.463e-02 & 1.281e-02 \\
--8.462e-03 & 2.191e-01 & -1.441e-02 & -8.443e-03 & -1.827e-02 \\
-4.726e-01 & 7.321e-03 & -1.712e-02 & -1.796e-02 \Bigr]
-\end{matrix} \]
-
-At \( t = 0.10 \):
-\[ q_2 = \begin{matrix}
-\Bigl[ 2.000e-02 & 0.000e+00 & 0.000e+00 & 0.000e+00 & 6.306e-03 \\
-1.898e-02 & 0.000e+00 & -3.908e-01 & -1.119e-02 & 1.474e-02 \\
--1.497e-02 & 3.572e-01 & -9.813e-03 & 3.396e-04 & -3.337e-02 \\
-9.616e-01 & 1.117e-02 & -9.421e-03 & -3.688e-02 \Bigr]
-\end{matrix} \]
-
-
-We use $u^1 = [-8.110e-01, -5.851e-01, -0.000e+00]$ for the first director of the space-parallel reference frame of the first edge. Now we compute the space parallel reference frame for t = 0 (after setting up the tangents from before). This is also the time-parallel reference frame for t = 0.
-\[ 
-\mathbf{a_1^1} = [-8.110e-01, -5.851e-01, -0.000e+00] \]
-\[
-\mathbf{a_1^2} = [ 2.996e-01, -9.541e-01,  0.000e+00] \]
-\[
-\mathbf{a_1^3} = [ 9.999e-01, -1.666e-02,  0.000e+00] \]
-\[
-\mathbf{a_1^4} = [ 3.311e-01,  9.436e-01,  0.000e+00] \]
-
-The reference twist may be computed by taking the parallel transport of the first time-parallel reference director from the $(k - 1)$-th edge to the $k$-th edge across the rod and computing the signed angle from that vector to the k-th time-parallel reference director about the $k$-th tangent. We obtain the reference twist at t = 0 as:
-\[
-\Delta m_{2, \text{ref}} = 2.717e-05, \quad \Delta m_{3, \text{ref}} = 1.388e-17, \quad \Delta m_{4, \text{ref}} = 0.000e+00
-\]
-
-The integrated discrete twist can be computed by adding the $k$-th reference twist to the difference of the $k$-th and $(k - 1)$-th twist angles. The integrated discrete twist at t = 0 is:
-\[
-\tau_2 = 2.717e-05, \quad \tau_3 = 1.388e-17, \quad \tau_4 = 0.000e+00
-\]
-
-(I also computed the material frames from the twist angles, but for the sake of brevity, I will not include them here. Please refer to the code for the full computation.)
-
-Following this, we calculate the time parallel reference frame by parallel transporting the previous time's reference frame director to the current time's reference frame (using the old and new tangents). Then, we repeat the previous process across the entire rod for the next time steps. 
-
-At \( t = 0.05 \) the time-parallel reference directors are:
-\[ 
-\mathbf{a_1^1} = [-8.110e-01, -5.851e-01, -0.000e+00] \]
-\[ 
-\mathbf{a_1^2} = [ 2.838e-01, -9.589e-01, -3.077e-03] \]
-\[ 
-\mathbf{a_1^3} = [ 9.999e-01,  7.865e-03,  5.387e-03] \]
-\[ 
-\mathbf{a_1^4} = [ 3.708e-01,  9.287e-01,  2.807e-04] \]
-
-
-We obtain the reference twist at t = 0.05 as:
-\[ 
-\Delta m_{2, \text{ref}} = -2.667e-01, \quad \Delta m_{3, \text{ref}} = -5.650e-01, \quad \Delta m_{4, \text{ref}} = -2.895e-01 
-\]
-
-And the integrated discrete twist at t = 0.05 is:
-\[ 
-\tau_2 = -4.673e-01, \quad \tau_3 = -1.453e-01, \quad \tau_4 = -3.602e-02 
-\]
-
-At \( t = 0.10 \), the time-parallel reference directors are:
-\[ 
-\mathbf{a_1^1} = [-8.110e-01, -5.851e-01, -0.000e+00] \]
-\[ 
-\mathbf{a_1^2} = [ 2.531e-01, -9.672e-01, -2.183e-02] \]
-\[ 
-\mathbf{a_1^3} = [ 9.982e-01,  4.799e-02,  3.714e-02] \]
-\[ 
-\mathbf{a_1^4} = [ 4.213e-01,  9.069e-01, -3.499e-03] \]
-
-We obtain the reference twist at t = 0.10 as:
-\[ 
-\Delta m_{2, \text{ref}} = -5.050e-01, \quad \Delta m_{3, \text{ref}} = -1.028e+00, \quad \Delta m_{4, \text{ref}} = -6.649e-01 
-\]
-
-And the integrated discrete twist at t = 0.10 is:
-\[ 
-\tau_2 = -8.958e-01, \quad \tau_3 = -2.803e-01, \quad \tau_4 = -6.051e-02 
-\]
-
-\bigskip
-
-\section{Chapter 7: Discrete Elastic Rods Algorithm} 
-
-\subsection*{Q1: Describe your implementation of the DER algorithm.}
-
-We first initialize our rod with the number of nodes, the time steps, and the necessary constants to calculate the initial conditions of the system (i.e. the masses, the positions, the weights, etc.). One important value we calculate is the undeformed reference lengths, which is used to calculate the voronoi lengths. This is important for our elastic energy calculations in the following equations.
-
-Some preliminary calculations are done (i.e. the reference twist and the curvature) as well as picking the free DOFs we care about (we will omit the values in the free DOFs in our calculations). Finally, from here we can start our loop.
-
-In the loop (from the 0th to however many time steps), we call an objective function that calculates the new positions, new velocities, and new time-parallel reference directors for the rod, given the current DOFs. The result is updated in the DOFs and we step in time at the end of the loop (making sure to save any data we need for plotting).
-
-In the objective function, we implement the Newton-Raphson method to solve for the new DOFs. Given our initial guess and a set error, we loop until we reach a desired accuracy. In this loop, we compute the time-parallel reference directors and tangents to obtain the new reference twists and the material frames. We then calculate the elastic energy and forces involved in the stretching, bending, and twisting of the rod. This includes calculating the Jacobians required for the update step of the Newton-Raphson method. Finally, we accumulate all the forces and jacobians of the system together, impose our boundary conditions, and solve for the delta DOFs, which we add to the current DOFs to get the new DOFs. If we reach the desired accuracy (check our error against a tolerance), we return the new DOFs, otherwise, we repeat the process again.
-
-\subsection*{Q1: Plot the z-coordinate of the last node with time.}
-
-Fig. \ref{"fig:p2q1_last_node"} shows the plot of the z-coordinate of the last node with time. The last node is initially at the origin, but as time progresses, the position oscillates and dampens to a final position of approximately 0.04. Forthe simulation, I used a small $\Delta t = 0.01$ s and a large $N = 50$. 
-
-\begin{figure}[!ht]
-        \centering
-        \includegraphics[width=0.7\textwidth,keepaspectratio]{last_node.png}
-        \caption{Plot of the z-coordinate of the last node with time}
-        \label{"fig:p2q1_last_node"}
-\end{figure}
+\subsection{Current Performance}
+The current implementation of the cloth simulation is technically realtime. (Soime figure) shows the initial frame times of the calculation. As you can see, not only is it true that the compute time increases as the number of vertices increases, but also the rate of the compute time is doubling for every square of n. This is clearly exponential growth. While it is true that the DEP algorithm is $O(n^2)$ where n is the number of vertices, we must also consider the growth of the number of hinges and edges as well. 
 
 
 
 
-% \begin{figure}[!ht]
-%         \centering
-%         \includegraphics[width=0.45\textwidth,keepaspectratio]{p3_implicit_maxvert2xzoomed.png}
-%         \caption{Plot of Maximum Vertical Displacement of the Beam v.s. the size of the point load (zoomed in again)}
-%         \label{"fig:p3q2_benefit_zoomed2x"}
-% \end{figure}
+
+\section{Problems Encountered}
+        I encountered numerous amounts of problems as I implemented the cloth simulation. I will discuss the most significant ones here.
+
+
+\subsection{Renderer Design}
+        As I was developing the cloth simulation, I realized that my renderer implementation was coupled. The initial idea of my renderer design was that the client would first pass in a Scene object into a render call, then the renderer would call the OpenGL draw calls for each of the primitives in the scene. In OpenGL (which could be contextualized as an highly configurable state machine), one must supply state to the OpenGL context before a draw call is executed. The usual state for draws (which is bound to the context) includes the shader programs to be executed on the GPU, the vertex array objects specifying the format of the vertex data, the buffers containing the vertex data (the positions, the indices to those positions if using indexed rendering), and other buffers/data that the shaders need. The key point here is that the vertex array object had to be created for every known object type in my renderer because each new object had vertex data in different formats. Because I elected to have the renderer responsible for all drawing of the primitives, I stored all the vertex array objects forr each type there. So if I had to add a new object type (like my cloth), I was forced to modify the renderer class as well. This directly goes against the idea of the Open-Closed Principle in software design. A solution to this would've been to use a visitor design pattern to render the objects so that the renderer would just call the render function of the actual object, with no distinction of what each object is. 
+
+
+\subsection{Subtlties in C++ and OpenGL}
+        I was caught up in a few subtlties in the C++ language and OpenGL. For instance, I spent a huge amount of time relearning what C++ templates are. I built my cloth system derived from a particle system and I wanted to allow the user to specify different parameters per system. I thought that I could use templates to allow the user to specify the different parameters structs to the different systems at compile time. This was a pain to code though. Because templates were expanded upon instantiation of the object (it was a template that gets expanded into a class), finding which line in my template was wrong was a debugging nightmare. It also proved to be a less effective design than I thought it would be too\dots
+        
+        Another subtlety I ran into was memory alignment issues in OpenGL. To start, the DEP algorithm assumes that the DOF vector is a $ 3 \times n $ by $ 1 $ column vector, where $n$ is the number of vertices. Naturally, a naive implementation would've been to create an array of 3 by n floats to represent the DOF vector used for calculating the forces and use the same DOF vector for drawing (specifying the vertex format to assume a vertex stream of vec3). This would work if I didn't use my DOF vector in the other (compute/debug) shaders (specifying the DOF vector as a shader buffer storage object (SSBO)).
+
+        Before going further and to make things clear, I have a two shaders (programs run on a GPU): one shader used for the rendering of the cloth itself (cloth shader), another for highlighting the certain primitives such as edges, hinges, and fixed points (highlight shader). The cloth shader requires the dof positions (containing the actual vertex data) to be passed in as a buffer. However, the highlight shader requires some method of retrieving points to be highlighted, whether it is through pasing the positions in directly or passing in an array of indices to the positions. I chose the latter because I was already updating the buffer for the cloth shader with new positions. Adding another buffer of positions would not only take up more space and be redundant, but also take marginally more compute time. I do acknowledge this assumes that indexing into a SSBO (shader storage buffer object) is faster than transfering the data from the CPU to GPU. Now because I elected to do the latter, I had to deal with memory alignment issues with my buffer. 
+
+        However, according to the OpenGL specification, when using UBOs or SSBOs, a vec3 is aligned to 16 bytes (4 floats) in GPU memory. This means that in the shader, when I try to index into an array of vec3s, the GPU will retrieve the result with 3 floats plus 4 bytes of padding. So when I copy the chunk of buffer data (the DOF vector) from CPU memory into GPU memory, I had to ensure that the total memory size of the dof buffer is a multiple of 16 bytes. Otherwise, the GPU would read 3 floats from the buffer, skip one float part of another point, and then read the next 3 floats, which is wrong. This means that after my force calculation, I had to create a way to send the data to the GPU such that my buffer acted as a vector of vec4s. This is still a naive answer however. 
+
+        There is another solution to this issue without aligning the DOF vector to 16 bytes. Instead of having the GPU read the buffer as an array of vec4s/vec3s, I could pass the buffer to the GPU as an array of floats (avoiding the alignment issue entirely). Then the vertex stream for rendering for the shaders (specifically the highlight shader since the dof positions must be read as a SSBO instead of a vertex stream) would be the indices of the particles themselves. Then in the shader, I could use the particle indices to compute the indices of the components of each dof for that particle. 
+
+\subsection{Precision and accumulation of error}
+        The final problem I had to deal with was precision errors. The original DEP algorithm implemented in python used numpy, which defaulted to using double precision floats in all of its calculations. However, I was using single precision floats in my C++ implementation. When comparing results between the C++ and Python implementations, I noticed that the results of the C++ implementation were way off as the simulation progressed. Through debugging, I found that my implicit simulation loop was iterating more times than the Python implementation. The loop is depndent on whether or not the accumulated error in the free forces were less than the tolerance. If the tolerance or error was a value that was different than the ones used in the Python simulation, then the number of iterations could also be different, leading to different results every time step. This causes slight deviations between the two implementations, which accumulates as time goes on. Simply switching the error and tolerance values to double precision floats steered the iteration counts to be similar. Changing all values to doubles, got the simulation to be almost identical to the Python implementation (any further differences would derive from the methods Eigen uses to compute values i.e. solving matrices, calculating square roots, etc).
+
+
+\section{Prospective Work}
+        Using the Microsoft Visual Studio performance profiler, I found that the performance of the simulation was bottlenecked by 2 calculations: the solving of the matrix (18\% of total CPU usage) and computing the gradient and hessians of the bending elastic energies (60\% of total CPU time). Here are a couple ways I will go about solving these issues:
+
+\subsection{Optimizing the Jacobian Calculation}
+
+\subsection{Optimizing the Bending Energy Gradient and Hessian Calculation}
+In the original python implementation of the bending energy gradient and hessian, there are two major areas of 
+
+
+\subsection{Multithreading the Simulation}
+
+\subsection{Using the Eigen Library properly}
+
+
+\section{Conclusion}
+
+
 
 \addtolength{\textheight}{-12cm}   % This command serves to balance the column lengths
                                   % on the last page of the document manually. It shortens
