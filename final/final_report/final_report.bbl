@@ -1,0 +1,25 @@
+\begin{thebibliography}{1}
+
+\bibitem{baraff1998large}
+D.~Baraff and A.~Witkin, {\em Large Steps in Cloth Simulation}.
+\newblock New York, NY, USA: Association for Computing Machinery, 1~ed., 1998.
+
+\bibitem{Grinspun2003discrete}
+E.~Grinspun, A.~N. Hirani, M.~Desbrun, and P.~Schr\"{o}der, ``Discrete shells,'' in {\em Proceedings of the 2003 ACM SIGGRAPH/Eurographics Symposium on Computer Animation}, SCA '03, (Goslar, DEU), p.~62–67, Eurographics Association, 2003.
+
+\bibitem{Tamstorf2013discrete}
+R.~Tamstorf and E.~Grinspun, ``Discrete bending forces and their jacobians,'' {\em Graph. Models}, vol.~75, p.~362–370, Nov. 2013.
+
+\bibitem{weil1986synthesis}
+J.~Weil, ``The synthesis of cloth objects,'' {\em ACM Siggraph Computer Graphics}, vol.~20, no.~4, pp.~49--54, 1986.
+
+\bibitem{provot1995deformation}
+X.~Provot {\em et~al.}, ``Deformation constraints in a mass-spring model to describe rigid cloth behaviour,'' 1995.
+
+\bibitem{terzopoulos1987elastically}
+D.~Terzopoulos, J.~Platt, A.~Barr, and K.~Fleischer, ``Elastically deformable models,'' {\em SIGGRAPH Comput. Graph.}, vol.~21, p.~205–214, Aug. 1987.
+
+\bibitem{jawedlimdiscrete}
+S.~MK~Jawed, Lim, ``Discrete simulation of slender structures,'' 2023.
+
+\end{thebibliography}
