@@ -70,7 +70,7 @@ Final Report: \\
 \author{Arrian Chi% <-this % stops a space
 \\
 \\
-\includegraphics[width=8cm]{cloth1.PNG} \> \includegraphics[width=8cm]{cloth2.PNG} 
+\includegraphics[width=8.7cm]{cloth1.PNG} \> \includegraphics[width=8.7cm]{cloth2.PNG} 
 }
 
 
@@ -189,7 +189,7 @@ In my initial proposal, I posed a few questions I would like my project to answe
 This is a lot of questions, so I will organize the report into 3 sections: Results, Process, and Issues. 
 
 \section{Results}
-I tested my simulation on an AMD Ryzen 9 7900 (with integrated graphics). The configuration of the mesh was akin to that of a table cloth (see figure \ref{fig}) There are three iterations of my simulation: a dense matrix version, a sparse matrix version, and PARDISO solver version. A table of the data collected can be seen in figures \ref{}. The data is displayed on a graph in figures \ref{"fig:"}. As one can see, each version's frame times are vary widely, each incurring improvement over the next. 
+I tested my simulation on an AMD Ryzen 9 7900 (with integrated graphics). The configuration of the mesh was akin to that of a table cloth (see figure \ref{fig:tablecloth}) with $\Delta t = 0.01, l_k = 0.1, m^{tot} = 0.01, g = 9.81, Y=1.0\times 10^7, h = 0.001$. There are three iterations of my simulation: a dense matrix version, a sparse matrix version, and PARDISO solver version. A table of the data collected can be seen in tables \ref{fig:plateproperties}, \ref{fig:frametimes}, \ref{fig:ratios}, and \ref{fig:speedups}. The data is displayed on a graph in Fig. \ref{fig:frametimesgraph}, \ref{fig:ratiosgraph}, and \ref{fig:speedupsgraph}. As one can see, each version's frame times are vary widely, each incurring improvement over the next. 
 
 Using the dense matrix version as a base, the sparse matrix incurred an $8\times$ speedup and the PARDISO solver version incurred a $10\times$ max speedup. These speedups are drastic and just goes to show how much dense matrices can be a bottleneck in the simulation. Comparing the sparse matrix version to the PARDISO solver version, the PARDISO solver version is at least $1.3\times$ faster than the sparse matrix version. This is expected since the PARDISO solver is more specialized towards solving the symmetric sparse matrices that the DEP algorithm produces.
 
@@ -197,13 +197,32 @@ The graphs also tell a telling story, the dense matrix version frame time grows 
 
 Finally, it is worth mentioning that the ratio between the force calculation time and the solver time was consistently less than 1 after 81 nodes. This further proves that the solver is the bottleneck of the simulation in that version. On both the sparse matrix and PARDISO solver versions, the ratio rose and fell. This suggests that starting with a small number of nodes, the solver produced enough overhead that made it slower than the force calculation, but as the number of nodes increased, the force calculation became the bottleneck. This would not last long when the number of nodes increases even further, we are introduced to the solver bottleneck again.
 
+\section{Process}
+ In the course of development for the cloth simulation, many amusing and interesting problems arose that I believe warrant discussion. In this section, I will provide a more in-depth explanantion of the implementation and highlight some key implementation details of the cloth simulation.
+
+\subsection{Cloth Mesh Creation and Parameterization}
+The mesh of the cloth is represented as a equilateral triangluar grid of particles connected by edges / hinges. The point positions are procedurally derived and dependent on a user supplied number of edges of the cloth and the edge length. In addition, the user also specifies the young's modulus, the thickness, the gravitational pull, and the timestep of the simulation.
+
+\subsection{First iteration of the Discrete Elastic Plate / Shells Algorithm Implementation}
+
+My implementation of the DEP Algorithm started out as a transcription of a python implementation that we went over during class. I leveraged the Eigen Library \cite{eigen_library} to handle the linear algebra computations in the algorithm. All calculations used the DenseMatrix object (which internally leverages a 2D array of numbers, a contiguous chunk of floats/doubles in memory). For the solver, I directly solved the matrix using the built in Eigen solver (LDLT solver). The outputs were verified by running the same input with the python implementation and comparing the results. This method of verification proved effective, since it revealed the first issue. 
+
+My renderer defaulted to using float (single precision floating point numbers) for all of its calculations. That is a good decision because there was no need for precision in calculations and floats are only 4 bytes in size (the same as a int on most environments). However, upon closer inspection, the python implementation used double precision floats (8 bytes in size). This caused the results of the C++ implementation to be off by a small amount. The error was small enough that it was negligible for small values of n, but as n increased, the error accumulated and the results diverged. This was fixed by changing all the floats to doubles in the C++ implementation. Rendering still used floats, so I had to create a buffer that cast all the double values to floats before sending it to the GPU.
+
+As shown in the results, the performance of initial simulation was abysmal. Both steps of the simulation, the force/Jacobian calculation and the solver, started staggering when the cloth side length was about 13-14 nodes (588-675 DOFs). At this stage, the solver took about 65\% of the total CPU time, while the force calculation took about 17\%. I believed that these steps can be optimized with multi-threading, but that proved to be slightly wrong. 
+
+Eigen already allows users to enable multi-threading capabilities implemented for matrix arithmetic. However, for solving, it only supports multithreaded solves with sparse matrices (without additional extensions \cite{eigen_library}). In pursuit of this optimization, I changed the dense matrices involved in the calculation to use sparse matrices. As seen in the previous section, there was a speedup when this was implemented, which I will explain shortly. 
+
+\subsection{Second iteration of the DEP/S Algorithm: Sparse Matrices and Multithreading}
+Sparse matrices are matrices that have a large number of zero values compared to the number of nonzero values. If we used a dense matrix to represent a sparse matrix, there would be a whole lot of wasted space in memory. Additionally, when calculating arithmetic, sparse matrices would take a long time with no value because most of the arithmetic operations would end up being zero. 
+
 \onecolumn
 \begin{figure}
-\begin{minipage}[b]{.45\linewidth}
+        \begin{minipage}[b]{.45\linewidth}
                 \centering
                 \begin{tabular}{|c|c|c|c|c|}
                 \hline
-                \textbf{Side Length} & \textbf{\# Nodes} & \textbf{\# DOFs} & \textbf{\#Edge} & \textbf{\# Hinge} \\ \hline
+                \textbf{Side Len} & \textbf{\# Nodes} & \textbf{\# DOFs} & \textbf{\#Edge} & \textbf{\# Hinge} \\ \hline
                 1                    & 4                    & 12                  & 5                   & 1                    \\ \hline
                 2                    & 9                    & 27                  & 16                  & 8                    \\ \hline
                 3                    & 16                   & 48                  & 33                  & 21                   \\ \hline
@@ -227,10 +246,13 @@ Finally, it is worth mentioning that the ratio between the force calculation tim
                 21                   & 484                  & 1440                & 1365                & 1281                 \\ \hline
                 22                   & 529                  & 1575                & 1496                & 1408                 \\ \hline
                 \end{tabular}
-                \caption{A table of plate properties per side length \#} \label{fig:plateproperties} 
-        \end{minipage} \\
-
-
+                \captionof{table}{A table of plate properties per side length \#} \label{fig:plateproperties} 
+        \end{minipage}
+        \begin{minipage}[b]{.45\linewidth}
+                \centering
+                \includegraphics[width=1.0\linewidth]{tablecloth.png}
+                \captionof{figure}{The tablecloth configuration of the cloth} \label{fig:tablecloth}
+        \end{minipage}
         \begin{minipage}[b]{.45\linewidth}
                 \begin{center}
                         \begin{tabular}{|c|c|c|c|}
@@ -264,8 +286,8 @@ Finally, it is worth mentioning that the ratio between the force calculation tim
         \end{minipage}\hfill
         \begin{minipage}[b]{.45\linewidth}
                 \centering
-                \includegraphics[width=1.1\linewidth]{frametimes.PNG}
-                \captionof{figure}{Graph of average frame times per simulation}% \caption{Figure caption}
+                \includegraphics[width=1.0\linewidth]{frametimes.PNG}
+                \captionof{figure}{Graph of average frame times per simulation} \label{fig:frametimesgraph}
         \end{minipage}
 \end{figure}
 
@@ -303,8 +325,8 @@ Finally, it is worth mentioning that the ratio between the force calculation tim
         \end{minipage}\hfill
         \begin{minipage}[b]{.45\linewidth}
                 \centering
-                \includegraphics[width=1.1\linewidth]{ratios.png}
-                \captionof{figure}{Graph of ratio of force to solver time}% \caption{Figure caption}
+                \includegraphics[width=1.0\linewidth]{ratios.png}
+                \captionof{figure}{Graph of ratio of force to solver time} \label{fig:ratiosgraph}
         \end{minipage}
 \end{figure}
 
@@ -337,32 +359,12 @@ Finally, it is worth mentioning that the ratio between the force calculation tim
         \end{minipage}\hfill
         \begin{minipage}[b]{.45\linewidth}
                 \centering
-                \includegraphics[width=1.1\linewidth]{speedups.png}
-                \captionof{figure}{Graph of simulation speedups}% \caption{Figure caption}
+                \includegraphics[width=1.0\linewidth]{speedups.png}
+                \captionof{figure}{Graph of simulation speedups} \label{fig:speedupsgraph}
         \end{minipage}
 \end{figure}
 
 \twocolumn
-
-\section{Process}
- In the course of development for the cloth simulation, many amusing and interesting problems arose that I believe warrant discussion. In this section, I will provide a more in-depth explanantion of the implementation and highlight some key implementation details of the cloth simulation.
-
-\subsection{Cloth Mesh Creation and Parameterization}
-The mesh of the cloth is represented as a equilateral triangluar grid of particles connected by edges / hinges. The point positions are procedurally derived and dependent on a user supplied number of edges of the cloth and the edge length. In addition, the user also specifies the young's modulus, the thickness, the gravitational pull, and the timestep of the simulation.
-
-\subsection{First iteration of the Discrete Elastic Plate / Shells Algorithm Implementation}
-
-My implementation of the DEP Algorithm started out as a transcription of a python implementation that we went over during class. I leveraged the Eigen Library \cite{eigen_library} to handle the linear algebra computations in the algorithm. All calculations used the DenseMatrix object (which internally leverages a 2D array of numbers, a contiguous chunk of floats/doubles in memory). For the solver, I directly solved the matrix using the built in Eigen solver (LDLT solver). The outputs were verified by running the same input with the python implementation and comparing the results. This method of verification proved effective, since it revealed the first issue. 
-
-My renderer defaulted to using float (single precision floating point numbers) for all of its calculations. That is a good decision because there was no need for precision in calculations and floats are only 4 bytes in size (the same as a int on most environments). However, upon closer inspection, the python implementation used double precision floats (8 bytes in size). This caused the results of the C++ implementation to be off by a small amount. The error was small enough that it was negligible for small values of n, but as n increased, the error accumulated and the results diverged. This was fixed by changing all the floats to doubles in the C++ implementation. Rendering still used floats, so I had to create a buffer that cast all the double values to floats before sending it to the GPU.
-
-As shown in the results, the performance of initial simulation was abysmal. Both steps of the simulation, the force/Jacobian calculation and the solver, started staggering when the cloth side length was about 13-14 nodes (588-675 DOFs). At this stage, the solver took about 65\% of the total CPU time, while the force calculation took about 17\%. I believed that these steps can be optimized with multi-threading, but that proved to be slightly wrong. 
-
-Eigen already allows users to enable multi-threading capabilities implemented for matrix arithmetic. However, for solving, it only supports multithreaded solves with sparse matrices (without additional extensions \cite{eigen_library}). In pursuit of this optimization, I changed the dense matrices involved in the calculation to use sparse matrices. As seen in the previous section, there was a speedup when this was implemented, which I will explain shortly. 
-
-\subsection{Second iteration of the DEP/S Algorithm: Sparse Matrices and Multithreading}
-Sparse matrices are matrices that have a large number of zero values compared to the number of nonzero values. If we used a dense matrix to represent a sparse matrix, there would be a whole lot of wasted space in memory. Additionally, when calculating arithmetic, sparse matrices would take a long time with no value because most of the arithmetic operations would end up being zero. 
-
 
 To solve this issue, sparse matrix implementations usually involve only 3 arrays: One for the nonzero values, one for the row indices of the nonzero values in the matrix, and one for the indices(into the value array) of the first nonzero value in each row per column (see Fig \ref{fig:sparse_matrix}). This representation (also known as the Compressed Sparse Format) is much more compact, and because there are less elements to iterate through(skipping through all the zero values), the arithmetic operations and solving algorithms are faster. To create the sparse matrix, it is best to supply the constructor with an array of triplets (row, col, val) for each entry in the desired matrix. So I had to change the force calculations to append these elements to an existing array of triplets (a.k.a. sparse entries) for the Jacobian force matrix (the calculation of the hessians per edge/hinge are still done with fixed-size dense matrices). This method was fine since the bending jacobian and the stretching jacobian are added later in the algorithm and duplicate items in the sparse entry array are summed up. Using this scheme and changing the solver to use the Conjugate Gradient Iterative solver, I secured a 4x speedup (as seen in the above).
 
@@ -391,7 +393,7 @@ The rendering of the cloth is simple. The cloth is rendered as a mesh of triangl
 \subsection{Subtlties in C++ and OpenGL}
         I was caught up in a few subtlties in the C++ language and OpenGL. For instance, I spent a huge amount of time relearning what C++ templates are. I derived my cloth system from a particle system interface because I wanted to allow the user to specify different parameters per system. Using templates opens the particle system to extension, so the user can customize the parameters and logic to supply to the system. The implementation of this (especially debugging) proved to be more arduious than I thought. Because templates were expanded upon instantiation of the object (it was a template that gets expanded into a class), the line that had the error of code was not indicated in the debug logs. This design also proved to be a less effective than perceived, supporting the idea that there are no zero cost abstractions \cite{caruth2019}. 
 
-        Another subtlety I ran into was memory alignment issues in OpenGL. To start, the DEP algorithm assumes that the DOF vector is a $ 3 \times n $ by $ 1 $ column vector, where $n$ is the number of vertices. My initial naive implementation consisted of an array of 3 by n floats to represent the DOF vector used for calculating the forces and use the same DOF vector for drawing (specifying the vertex format to assume a vertex stream of vec3). This would work if I didn't use my DOF vector in the other (compute/debug) shaders (specifying the DOF vector as a shader buffer storage object (SSBO)).
+        This project also showed me how flawed the OpenGL API is. This arose with a subtlety around memory alignment issues. To start, the DEP algorithm assumes that the DOF vector is a $ 3 \times n $ by $ 1 $ column vector, where $n$ is the number of vertices. My initial naive implementation consisted of an array of 3 by n floats to represent the DOF vector used for calculating the forces and use the same DOF vector for drawing (specifying the vertex format to assume a vertex stream of vec3). This would work if I didn't use my DOF vector in the other (compute/debug) shaders (specifying the DOF vector as a shader buffer storage object (SSBO)).
 
         Before going further and to make things clear, I have a two shaders (programs run on a GPU): one shader used for the rendering of the cloth itself (cloth shader), another for highlighting the certain primitives such as edges, hinges, and fixed points (highlight shader). The cloth shader requires the DOF positions (containing the actual vertex data) to be passed in as a buffer. However, the highlight shader requires some method of retrieving points to be highlighted, whether it is through pasing the positions in directly or passing in an array of indices to the positions. I chose the latter because I was already updating the buffer for the cloth shader with new positions. Adding another buffer of positions would not only take up more space and be redundant, but also take marginally more compute time. I do acknowledge this assumes that indexing into a SSBO (shader storage buffer object) is faster than transfering the data from the CPU to GPU. Now because I elected to do the latter, I had to deal with memory alignment issues with my buffer. 
 
@@ -411,7 +413,13 @@ The rendering of the cloth is simple. The cloth is rendered as a mesh of triangl
         The second issue I encountered was that PARDISO does not use column major ordering for its sparse matrices. I originally set PARDISO to solve for a unsymmetric real matrix (which is wrong because the Jacobian is a symmetric matrix) and used column major ordering for that matrix (providing PARDISO with direct pointers to the underlying Eigen sparse matrix data). This didn't matter because the transpose of the symmetric matrix is the same as the matrix itself. However, when I changed the solver to solve for a symmetric real matrix (which only needed a upper triangular part of the matrix), I had to change the ordering of the calculation into row major ordering. This was a simple fix, but it was a huge headache to debug because the error messages from PARDISO were not helpful.
 
 \subsection{Degeneracies}
-        It is known that the DEP/S algorithm is prone to some degeneracies, such as when an edge collapses or when the altitude collapses \cite{Tamstorf2013discrete}. This may manifest int the calculation as a division by zero error during the solve, an infinite loop (the error never reaches the desired tolerance), or the cloth visually becomes a cloud of points (see figure \ref{"fig:chaos"}). These may arise when the solver is unable to reach a valid solution. This is more common in simulations with more DOFs as there is more freedom for numerical instability to occur. In my own tests, the most nodes I found that would reach the resting state without reaching numerical instability is 529 nodes (1575 DOFs, side length = 22). Of course, numerical instability could be mitigated by using a smaller timestep, but this would slow down the simulation (more time steps per second and more work to compute the next position at the next second). Another potential solution would be to check the solver solution before it updates the DOF vector. If the solution is degenerate, special care can be taken (i.e. halve the time step used for the rest of the iterations). Regardless, this problem requires more investigation to find a more robust solution.
+        It is known that the DEP/S algorithm is prone to some degeneracies, such as when an edge collapses or when the altitude collapses \cite{Tamstorf2013discrete}. This may manifest int the calculation as a division by zero error during the solve, an infinite loop (the error never reaches the desired tolerance), or the cloth visually becomes a cloud of points (see figure \ref{fig:chaos}). These may arise when the solver is unable to reach a valid solution. This is more common in simulations with more DOFs as there is more freedom for numerical instability to occur. In my own tests, the most nodes I found that would reach the resting state without reaching numerical instability is 529 nodes (1575 DOFs, side length = 22). Of course, numerical instability could be mitigated by using a smaller timestep, but this would slow down the simulation (more time steps per second and more work to compute the next position at the next second). Another potential solution would be to check the solver solution before it updates the DOF vector. If the solution is degenerate, special care can be taken (i.e. halve the time step used for the rest of the iterations). Regardless, this problem requires more investigation to find a more robust solution.
+
+\begin{figure}
+        \centering
+        \includegraphics[width=0.5\textwidth]{chaos1.png}
+        \caption{A simulation of a cloth with 576 nodes that has reached a degenerate state} \label{fig:chaos}
+\end{figure}
 
 \section{Remarks}
         The definition of real-time in this project is ill-posed. The simulation could be considered real-time, but only consist of 4 nodes (not exactly a cloth). The simulation could also be considered real-time if the timestep is large enough that the simulation is not accurate or stable. In the course of development, I kept trying to push the limits of the simulation to see how fast it could improve upon the first implementation. If the simulation was slower than it is now, I would have needed to define the question more concretely. 
