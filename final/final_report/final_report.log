@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.18)  3 DEC 2024 15:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.18)  3 DEC 2024 19:30
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -327,85 +327,174 @@ Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
 \ALG@tmplength=\skip61
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
+) (c:/texlive/2024/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+ (c:/texlive/2024/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+\caption@tempdima=\dimen167
+\captionmargin=\dimen168
+\caption@leftmargin=\dimen169
+\caption@rightmargin=\dimen170
+\caption@width=\dimen171
+\caption@indent=\dimen172
+\caption@parindent=\dimen173
+\caption@hangindent=\dimen174
+Package caption Info: Unknown document class (or package),
+(caption)             standard defaults will be used.
+Package caption Info: \@makecaption = \long macro:#1#2->\ifx \@captype \@IEEEtablestring \begin {center}{\footnotesize #1}\\{\footnotesize \scshape #2}\end {center}\@IEEEtablecaptionsepspace \else \@IEEEfigurecaptionsepspace \setbox \@tempboxa \hbox {\footnotesize #1.~~ #2}\ifdim \wd \@tempboxa >\hsize \setbox \@tempboxa \hbox {\footnotesize #1.~~ }\parbox [t]{\hsize }{\footnotesize \noindent \unhbox \@tempboxa #2}\else \ifcenterfigcaptions \hbox to\hsize {\footnotesize \hfil \box \@tempboxa \hfil }\else \hbox to\hsize {\footnotesize \box \@tempboxa \hfil }\fi \fi \fi  on input line 1175.
+)
+
+Package caption Warning: Unknown document class (or package),
+(caption)                standard defaults will be used.
+See the caption package documentation for explanation.
+
+\c@caption@flags=\count306
+\c@continuedfloat=\count307
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+) (c:/texlive/2024/texmf-dist/tex/latex/adjustbox/adjustbox.sty
+Package: adjustbox 2022/10/17 v1.3a Adjusting TeX boxes (trim, clip, ...)
+ (c:/texlive/2024/texmf-dist/tex/latex/xkeyval/xkeyval.sty
+Package: xkeyval 2022/06/16 v2.9 package option processing (HA)
+ (c:/texlive/2024/texmf-dist/tex/generic/xkeyval/xkeyval.tex (c:/texlive/2024/texmf-dist/tex/generic/xkeyval/xkvutils.tex
+\XKV@toks=\toks29
+\XKV@tempa@toks=\toks30
+)
+\XKV@depth=\count308
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+)) (c:/texlive/2024/texmf-dist/tex/latex/adjustbox/adjcalc.sty
+Package: adjcalc 2012/05/16 v1.1 Provides advanced setlength with multiple back-ends (calc, etex, pgfmath)
+) (c:/texlive/2024/texmf-dist/tex/latex/adjustbox/trimclip.sty
+Package: trimclip 2020/08/19 v1.2 Trim and clip general TeX material
+ (c:/texlive/2024/texmf-dist/tex/latex/collectbox/collectbox.sty
+Package: collectbox 2022/10/17 v0.4c Collect macro arguments as boxes
+\collectedbox=\box58
+)
+\tc@llx=\dimen175
+\tc@lly=\dimen176
+\tc@urx=\dimen177
+\tc@ury=\dimen178
+Package trimclip Info: Using driver 'tc-pdftex.def'.
+ (c:/texlive/2024/texmf-dist/tex/latex/adjustbox/tc-pdftex.def
+File: tc-pdftex.def 2019/01/04 v2.2 Clipping driver for pdftex
+))
+\adjbox@Width=\dimen179
+\adjbox@Height=\dimen180
+\adjbox@Depth=\dimen181
+\adjbox@Totalheight=\dimen182
+\adjbox@pwidth=\dimen183
+\adjbox@pheight=\dimen184
+\adjbox@pdepth=\dimen185
+\adjbox@ptotalheight=\dimen186
+ (c:/texlive/2024/texmf-dist/tex/latex/ifoddpage/ifoddpage.sty
+Package: ifoddpage 2022/10/18 v1.2 Conditionals for odd/even page detection
+\c@checkoddpage=\count309
+) (c:/texlive/2024/texmf-dist/tex/latex/varwidth/varwidth.sty
+Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
+\@vwid@box=\box59
+\sift@deathcycles=\count310
+\@vwid@loff=\dimen187
+\@vwid@roff=\dimen188
+)) (c:/texlive/2024/texmf-dist/tex/latex/booktabs/booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen189
+\lightrulewidth=\dimen190
+\cmidrulewidth=\dimen191
+\belowrulesep=\dimen192
+\belowbottomsep=\dimen193
+\aboverulesep=\dimen194
+\abovetopsep=\dimen195
+\cmidrulesep=\dimen196
+\cmidrulekern=\dimen197
+\defaultaddspace=\dimen198
+\@cmidla=\count311
+\@cmidlb=\count312
+\@aboverulesep=\dimen199
+\@belowrulesep=\dimen256
+\@thisruleclass=\count313
+\@lastruleclass=\count314
+\@thisrulewidth=\dimen257
 ) (c:/texlive/2024/texmf-dist/tex/latex/outlines/outlines.sty
 Package: outlines 2012/1/23 1.1 Ch. Pecheur
 )
-** ATTENTION: Overriding command lockouts (line 35).
-** ATTENTION: Overriding IEEE standard margins (line 38).
+** ATTENTION: Overriding command lockouts (line 39).
+** ATTENTION: Overriding IEEE standard margins (line 42).
 (./final_report.aux)
 \openout1 = `final_report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 75.
-LaTeX Font Info:    ... okay on input line 75.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 75.
-LaTeX Font Info:    ... okay on input line 75.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 75.
-LaTeX Font Info:    ... okay on input line 75.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 75.
-LaTeX Font Info:    ... okay on input line 75.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 75.
-LaTeX Font Info:    ... okay on input line 75.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 75.
-LaTeX Font Info:    ... okay on input line 75.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 75.
-LaTeX Font Info:    ... okay on input line 75.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 75.
-LaTeX Font Info:    ... okay on input line 75.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 75.
-LaTeX Font Info:    ... okay on input line 75.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 79.
+LaTeX Font Info:    ... okay on input line 79.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 79.
+LaTeX Font Info:    ... okay on input line 79.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 79.
+LaTeX Font Info:    ... okay on input line 79.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 79.
+LaTeX Font Info:    ... okay on input line 79.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 79.
+LaTeX Font Info:    ... okay on input line 79.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 79.
+LaTeX Font Info:    ... okay on input line 79.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 79.
+LaTeX Font Info:    ... okay on input line 79.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 79.
+LaTeX Font Info:    ... okay on input line 79.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 79.
+LaTeX Font Info:    ... okay on input line 79.
  (c:/texlive/2024/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count306
-\scratchdimen=\dimen167
-\scratchbox=\box58
-\nofMPsegments=\count307
-\nofMParguments=\count308
-\everyMPshowfont=\toks29
-\MPscratchCnt=\count309
-\MPscratchDim=\dimen168
-\MPnumerator=\count310
-\makeMPintoPDFobject=\count311
-\everyMPtoPDFconversion=\toks30
+\scratchcounter=\count315
+\scratchdimen=\dimen258
+\scratchbox=\box60
+\nofMPsegments=\count316
+\nofMParguments=\count317
+\everyMPshowfont=\toks31
+\MPscratchCnt=\count318
+\MPscratchDim=\dimen259
+\MPnumerator=\count319
+\makeMPintoPDFobject=\count320
+\everyMPtoPDFconversion=\toks32
 ) (c:/texlive/2024/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
  (c:/texlive/2024/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
 ))
-Package hyperref Info: Link coloring OFF on input line 75.
+Package hyperref Info: Link coloring OFF on input line 79.
  (./final_report.out) (./final_report.out)
 \@outlinefile=\write3
 \openout3 = `final_report.out'.
 
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
 <cloth1.PNG, id=68, 581.17125pt x 351.714pt>
 File: cloth1.PNG Graphic file (type png)
 <use cloth1.PNG>
-Package pdftex.def Info: cloth1.PNG  used on input line 81.
+Package pdftex.def Info: cloth1.PNG  used on input line 85.
 (pdftex.def)             Requested size: 227.62204pt x 137.75288pt.
 <cloth2.PNG, id=70, 581.7735pt x 349.90726pt>
 File: cloth2.PNG Graphic file (type png)
 <use cloth2.PNG>
-Package pdftex.def Info: cloth2.PNG  used on input line 81.
+Package pdftex.def Info: cloth2.PNG  used on input line 85.
 (pdftex.def)             Requested size: 227.62204pt x 136.90108pt.
 File: cloth1.PNG Graphic file (type png)
 <use cloth1.PNG>
-Package pdftex.def Info: cloth1.PNG  used on input line 81.
+Package pdftex.def Info: cloth1.PNG  used on input line 85.
 (pdftex.def)             Requested size: 227.62204pt x 137.75288pt.
 File: cloth2.PNG Graphic file (type png)
 <use cloth2.PNG>
-Package pdftex.def Info: cloth2.PNG  used on input line 81.
+Package pdftex.def Info: cloth2.PNG  used on input line 85.
 (pdftex.def)             Requested size: 227.62204pt x 136.90108pt.
 
 
-LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 103.
+LaTeX Font Info:    Trying to load font information for OT1+pcr on input line 107.
 (c:/texlive/2024/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 File: ot1pcr.fd 2001/06/04 font definitions for OT1/pcr.
 )
-LaTeX Font Info:    Trying to load font information for U+msa on input line 103.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 107.
  (c:/texlive/2024/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 103.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 107.
  (c:/texlive/2024/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
@@ -414,19 +503,19 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 
  <./cloth1.PNG> <./cloth2.PNG>]
-Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 121.
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on input line 125.
 
-Underfull \hbox (badness 10000) in paragraph at lines 122--131
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 122--131
+Underfull \hbox (badness 10000) in paragraph at lines 126--135
 
  []
 
 
-LaTeX Warning: Float too large for page by 5.50562pt on input line 180.
+Underfull \hbox (badness 10000) in paragraph at lines 126--135
+
+ []
+
+
+LaTeX Warning: Float too large for page by 5.50562pt on input line 184.
 
 
 LaTeX Warning: `h' float specifier changed to `ht'.
@@ -435,10 +524,13 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 [2]
 
-LaTeX Warning: Reference `"fig:"' on page 3 undefined on input line 188.
+LaTeX Warning: Reference `fig' on page 3 undefined on input line 192.
 
 
-LaTeX Warning: Reference `"fig:"' on page 3 undefined on input line 188.
+LaTeX Warning: Reference `' on page 3 undefined on input line 192.
+
+
+LaTeX Warning: Reference `"fig:"' on page 3 undefined on input line 192.
 
 
 
@@ -447,21 +539,87 @@ LaTeX Warning: Reference `"fig:"' on page 3 undefined on input line 188.
 [3
 
 
+
 ]
+Overfull \hbox (14.58948pt too wide) in paragraph at lines 204--230
+ [][] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 202--232
+
+ []
+
+<frametimes.PNG, id=111, 328.8285pt x 260.172pt>
+File: frametimes.PNG Graphic file (type png)
+<use frametimes.PNG>
+Package pdftex.def Info: frametimes.PNG  used on input line 267.
+(pdftex.def)             Requested size: 250.41522pt x 198.13768pt.
+
+Overfull \hbox (22.76628pt too wide) in paragraph at lines 267--268
+ [][] 
+ []
+
+<ratios.png, id=112, 328.8285pt x 260.172pt>
+File: ratios.png Graphic file (type png)
+<use ratios.png>
+Package pdftex.def Info: ratios.png  used on input line 306.
+(pdftex.def)             Requested size: 250.41522pt x 198.13768pt.
+
+Overfull \hbox (22.76628pt too wide) in paragraph at lines 306--307
+ [][] 
+ []
+
+<speedups.png, id=113, 328.8285pt x 260.172pt>
+File: speedups.png Graphic file (type png)
+<use speedups.png>
+Package pdftex.def Info: speedups.png  used on input line 340.
+(pdftex.def)             Requested size: 250.41522pt x 198.13768pt.
+
+Overfull \hbox (22.76628pt too wide) in paragraph at lines 340--341
+ [][] 
+ []
 
 
 
-[4]
+[4 <./frametimes.png>]
+
+[5 <./ratios.png> <./speedups.png>]
+
+<spmat.PNG, id=129, 284.262pt x 267.399pt>
+File: spmat.PNG Graphic file (type png)
+<use spmat.PNG>
+Package pdftex.def Info: spmat.PNG  used on input line 371.
+(pdftex.def)             Requested size: 177.06458pt x 166.56497pt.
+
+
+[6
+
+
+ <./spmat.PNG>]
 
 
 
-[5]
-
-LaTeX Warning: Reference `"fig:chaos"' on page 6 undefined on input line 259.
+[7]
 
 
+LaTeX Warning: Reference `"fig:chaos"' on page 8 undefined on input line 414.
 
-(./final_report.bbl)
+
+
+[8] (./final_report.bbl
+Underfull \hbox (badness 1565) in paragraph at lines 8--9
+\OT1/ptm/m/it/8 Sym-po-sium on Com-puter An-i-ma-tion\OT1/ptm/m/n/8 , SCA '03, (Goslar, DEU),
+ []
+
+
+
+
+Underfull \hbox (badness 1496) in paragraph at lines 38--39
+[]\OT1/ptm/m/n/8 A. Eftekhari, D. Pasadakis, M. Bollh[]ofer, S. Schei-deg-ger, and
+ []
+
+)
 
 ** Conference Paper **
 Before submitting the final camera ready copy, remember to:
@@ -475,7 +633,7 @@ Before submitting the final camera ready copy, remember to:
 
 
 
-[6] (./final_report.aux)
+[9] (./final_report.aux)
  ***********
 LaTeX2e <2024-06-01> patch level 2
 L3 programming layer <2024-09-10>
@@ -485,21 +643,21 @@ L3 programming layer <2024-09-10>
 LaTeX Warning: There were undefined references.
 
 Package rerunfilecheck Info: File `final_report.out' has not changed.
-(rerunfilecheck)             Checksum: 09DF977DC629A13AF52841C6C662D9C4;2974.
+(rerunfilecheck)             Checksum: A466E96E2B1FE6FA07B48E4BFD1E78AF;2974.
  ) 
 Here is how much of TeX's memory you used:
- 10802 strings out of 473578
- 168803 string characters out of 5732241
- 580473 words of memory out of 5000000
- 33512 multiletter control sequences out of 15000+600000
+ 13361 strings out of 473578
+ 216107 string characters out of 5732241
+ 646129 words of memory out of 5000000
+ 36013 multiletter control sequences out of 15000+600000
  597277 words of font info for 106 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,12n,79p,1803b,440s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,1803b,500s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb><c:/texlive/2024/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/texlive/2024/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb><c:/texlive/2024/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/texlive/2024/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on final_report.pdf (6 pages, 265063 bytes).
+Output written on final_report.pdf (9 pages, 340911 bytes).
 PDF statistics:
- 203 PDF objects out of 1000 (max. 8388607)
- 161 compressed objects within 2 object streams
- 40 named destinations out of 1000 (max. 500000)
- 139 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 239 PDF objects out of 1000 (max. 8388607)
+ 186 compressed objects within 2 object streams
+ 54 named destinations out of 1000 (max. 500000)
+ 159 words of extra memory for PDF output out of 10000 (max. 10000000)
 

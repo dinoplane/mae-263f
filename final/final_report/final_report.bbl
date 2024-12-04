@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{baraff1998large}
 D.~Baraff and A.~Witkin, {\em Large Steps in Cloth Simulation}.
@@ -21,5 +21,31 @@ D.~Terzopoulos, J.~Platt, A.~Barr, and K.~Fleischer, ``Elastically deformable mo
 
 \bibitem{jawedlimdiscrete}
 S.~MK~Jawed, Lim, ``Discrete simulation of slender structures,'' 2023.
+
+\bibitem{eigen_library}
+G.~Guennebaud, B.~Jacob, {\em et~al.}, {\em Eigen: A C++ template library for linear algebra}.
+\newblock Eigen Contributors, 2024.
+\newblock Accessed: 2024-11-20.
+
+\bibitem{kernel_false_sharing}
+L.~K. Contributors, {\em False Sharing in the Linux Kernel}, 2024.
+\newblock Accessed: 2024-11-20.
+
+\bibitem{Pasadakis2023}
+D.~Pasadakis, M.~Bollhöfer, and O.~Schenk, ``Sparse quadratic approximation for graph learning,'' {\em IEEE Transactions on Pattern Analysis and Machine Intelligence}, vol.~45, no.~9, pp.~11256--11269, 2023.
+
+\bibitem{EFTEKHARI2021101389}
+A.~Eftekhari, D.~Pasadakis, M.~Bollhöfer, S.~Scheidegger, and O.~Schenk, ``Block-enhanced precision matrix estimation for large-scale datasets,'' {\em Journal of Computational Science}, vol.~53, p.~101389, 2021.
+
+\bibitem{gaedkemerzhäuser2022}
+L.~Gaedke-Merzhäuser, J.~van Niekerk, O.~Schenk, and H.~Rue, ``Parallelized integrated nested laplace approximations for fast bayesian inference,'' 2022.
+
+\bibitem{caruth2019}
+C.~Caruth, ``There are no zero-cost abstractions.'' CPPCon 2019, 2019.
+
+\bibitem{opengl_documentation}
+{Khronos Group}, {\em OpenGL Documentation}.
+\newblock Khronos Group.
+\newblock Accessed: 2024-11-20.
 
 \end{thebibliography}

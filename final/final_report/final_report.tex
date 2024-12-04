@@ -12,6 +12,10 @@
 \usepackage[utf8]{inputenc}
 \usepackage{algorithm}
 \usepackage[noend]{algpseudocode}
+\usepackage{caption}
+
+\usepackage{adjustbox}
+\usepackage{booktabs}
 
 \usepackage{outlines}
 
@@ -185,14 +189,160 @@ In my initial proposal, I posed a few questions I would like my project to answe
 This is a lot of questions, so I will organize the report into 3 sections: Results, Process, and Issues. 
 
 \section{Results}
-I tested my simulation on an AMD Ryzen 9 7900 (with integrated graphics). There are three iterations of my simulation: a dense matrix version, a sparse matrix version, and pardiso solver version. A table of the data collected can be seen in figures \ref{"fig:"}. The data is displayed on a graph in figures \ref{"fig:"}. As one can see, each version's frame times are vary widely, each incurring improvement over the next. 
+I tested my simulation on an AMD Ryzen 9 7900 (with integrated graphics). The configuration of the mesh was akin to that of a table cloth (see figure \ref{fig}) There are three iterations of my simulation: a dense matrix version, a sparse matrix version, and PARDISO solver version. A table of the data collected can be seen in figures \ref{}. The data is displayed on a graph in figures \ref{"fig:"}. As one can see, each version's frame times are vary widely, each incurring improvement over the next. 
 
-Using the dense matrix version as a base, the sparse matrix incurred an average (TODO) speedup and the pardiso solver version incurred an average (TODO) speedup. These speedups are drastic and just goes to show how much dense matrices can be a bottleneck in the simulation. Comparing the sparse matrix version to the pardiso solver version, the pardiso solver version is about (TODO) faster than the sparse matrix version. This is expected since the pardiso solver is more specialized towards solving the symmetric sparse matrices that the DEP algorithm produces.
+Using the dense matrix version as a base, the sparse matrix incurred an $8\times$ speedup and the PARDISO solver version incurred a $10\times$ max speedup. These speedups are drastic and just goes to show how much dense matrices can be a bottleneck in the simulation. Comparing the sparse matrix version to the PARDISO solver version, the PARDISO solver version is at least $1.3\times$ faster than the sparse matrix version. This is expected since the PARDISO solver is more specialized towards solving the symmetric sparse matrices that the DEP algorithm produces.
 
-The graphs also tell a telling story, the dense matrix version frame time grows consistently with the predicted $O(n^3)$ time complexity (mostly from the matrix solve), breaking 800ms per frame at 529 nodes. The sparse matrix and pardiso solver versions grow at a much flatter linear-like rate, with the pardiso solver breaking 81ms per frame at 529 nodes compared to the sparse matrix version's 87ms per frame.
+The graphs also tell a telling story, the dense matrix version frame time grows consistently with the predicted $O(n^3)$ time complexity (mostly from the matrix solve), breaking 800ms per frame at 529 nodes. The sparse matrix and PARDISO solver versions grow at a much flatter linear-like rate, with the PARDISO solver breaking 81ms per frame at 529 nodes compared to the sparse matrix version's 87ms per frame.
 
-Finally, it is worth mentioning that the ratio between the force calculation time and the solver time was consistently less than 1 after 81 nodes. This further proves that the solver is the bottleneck of the simulation in that version. On both the sparse matrix and pardiso solver versions, the ratio rose and fell. This suggests that starting with a small number of nodes, the solver produced enough overhead that made it slower than the force calculation, but as the number of nodes increased, the force calculation became the bottleneck. This would not last long when the number of nodes increases even further, we are introduced to the solver bottleneck again.
+Finally, it is worth mentioning that the ratio between the force calculation time and the solver time was consistently less than 1 after 81 nodes. This further proves that the solver is the bottleneck of the simulation in that version. On both the sparse matrix and PARDISO solver versions, the ratio rose and fell. This suggests that starting with a small number of nodes, the solver produced enough overhead that made it slower than the force calculation, but as the number of nodes increased, the force calculation became the bottleneck. This would not last long when the number of nodes increases even further, we are introduced to the solver bottleneck again.
 
+\onecolumn
+\begin{figure}
+\begin{minipage}[b]{.45\linewidth}
+                \centering
+                \begin{tabular}{|c|c|c|c|c|}
+                \hline
+                \textbf{Side Length} & \textbf{\# Nodes} & \textbf{\# DOFs} & \textbf{\#Edge} & \textbf{\# Hinge} \\ \hline
+                1                    & 4                    & 12                  & 5                   & 1                    \\ \hline
+                2                    & 9                    & 27                  & 16                  & 8                    \\ \hline
+                3                    & 16                   & 48                  & 33                  & 21                   \\ \hline
+                4                    & 25                   & 75                  & 56                  & 40                   \\ \hline
+                5                    & 36                   & 108                 & 85                  & 65                   \\ \hline
+                6                    & 49                   & 147                 & 120                 & 96                   \\ \hline
+                7                    & 64                   & 192                 & 161                 & 133                  \\ \hline
+                8                    & 81                   & 243                 & 208                 & 176                  \\ \hline
+                9                    & 100                  & 300                 & 261                 & 225                  \\ \hline
+                10                   & 121                  & 363                 & 320                 & 280                  \\ \hline
+                11                   & 144                  & 432                 & 385                 & 341                  \\ \hline
+                12                   & 169                  & 507                 & 456                 & 408                  \\ \hline
+                13                   & 196                  & 588                 & 533                 & 481                  \\ \hline
+                14                   & 225                  & 675                 & 616                 & 560                  \\ \hline
+                15                   & 256                  & 768                 & 705                 & 645                  \\ \hline
+                16                   & 289                  & 867                 & 800                 & 736                  \\ \hline
+                17                   & 324                  & 972                 & 901                 & 833                  \\ \hline
+                18                   & 361                  & 1083                & 1008                & 936                  \\ \hline
+                19                   & 400                  & 1200                & 1121                & 1045                 \\ \hline
+                20                   & 441                  & 1323                & 1240                & 1160                 \\ \hline
+                21                   & 484                  & 1440                & 1365                & 1281                 \\ \hline
+                22                   & 529                  & 1575                & 1496                & 1408                 \\ \hline
+                \end{tabular}
+                \caption{A table of plate properties per side length \#} \label{fig:plateproperties} 
+        \end{minipage} \\
+
+
+        \begin{minipage}[b]{.45\linewidth}
+                \begin{center}
+                        \begin{tabular}{|c|c|c|c|}
+                        \hline
+                        \textbf{\# Nodes} & \textbf{Dense} & \textbf{Sparse} & \textbf{PARDISO} \\ \hline
+                        4                 & 2.14568        & 1.9417          & 1.97905          \\ \hline
+                        9                 & 2.09046        & 1.86291         & 2.07927          \\ \hline
+                        16                & 2.19543        & 1.87658         & 1.90431          \\ \hline
+                        25                & 2.26691        & 1.9805          & 2.17057          \\ \hline
+                        36                & 2.32498        & 2.02624         & 2.2378           \\ \hline
+                        49                & 2.26632        & 2.17572         & 2.42311          \\ \hline
+                        64                & 2.55798        & 2.38529         & 3.17389          \\ \hline
+                        81                & 3.13174        & 3.07915         & 3.64856          \\ \hline
+                        100               & 4.36049        & 3.40046         & 5.1266           \\ \hline
+                        121               & 10.8998        & 5.11832         & 7.15082          \\ \hline
+                        144               & 29.2132        & 5.81131         & 11.5085          \\ \hline
+                        169               & 38.4439        & 14.5564         & 13.0989          \\ \hline
+                        196               & 58.0018        & 23.1701         & 22.7056          \\ \hline
+                        225               & 72.0361        & 27.0657         & 27.7778          \\ \hline
+                        256               & 117.31         & 33.3114         & 32.7209          \\ \hline
+                        289               & 133.053        & 44.3635         & 36.9456          \\ \hline
+                        324               & 210.592        & 50.7165         & 39.6869          \\ \hline
+                        361               & 266.549        & 66.6435         & 47.0635          \\ \hline
+                        400               & 323.052        & 81.0222         & 60.7701          \\ \hline
+                        441               & 574.367        & 84.1108         & 65.9397          \\ \hline
+                        484               & 638.038        & 92.7115         & 74.1809          \\ \hline
+                        529               & 873.053        & 105.039         & 81.0643          \\ \hline
+                        \end{tabular}
+                \end{center}
+                \captionof{table}{A table of average frame times (ms/frame) per plate per simulation } \label{fig:frametimes}
+        \end{minipage}\hfill
+        \begin{minipage}[b]{.45\linewidth}
+                \centering
+                \includegraphics[width=1.1\linewidth]{frametimes.PNG}
+                \captionof{figure}{Graph of average frame times per simulation}% \caption{Figure caption}
+        \end{minipage}
+\end{figure}
+
+\begin{figure}
+        \begin{minipage}[b]{.45\linewidth}
+                \begin{center}
+                        \begin{tabular}{|c|c|c|c|}
+                        \hline
+                        \textbf{\# Nodes} & \multicolumn{1}{c|}{\textbf{Dense}} & \multicolumn{1}{c|}{\textbf{Sparse}} & \multicolumn{1}{c|}{\textbf{PARDISO}} \\ \hline
+                        4                 & 1.189                               & 1.178                                & 0.031                                 \\ \hline
+                        9                 & 4.007                               & 0.328                                & 0.124                                 \\ \hline
+                        16                & 3.856                               & 2.932                                & 0.323                                 \\ \hline
+                        25                & 3.166                               & 1.867                                & 0.468                                 \\ \hline
+                        36                & 2.496                               & 1.728                                & 0.649                                 \\ \hline
+                        49                & 1.726                               & 1.521                                & 0.741                                 \\ \hline
+                        64                & 1.294                               & 1.145                                & 0.862                                 \\ \hline
+                        81                & 0.982                               & 1.223                                & 0.912                                 \\ \hline
+                        100               & 0.689                               & 0.955                                & 0.880                                 \\ \hline
+                        121               & 0.565                               & 0.895                                & 1.007                                 \\ \hline
+                        144               & 0.448                               & 0.827                                & 1.131                                 \\ \hline
+                        169               & 0.322                               & 0.891                                & 1.101                                 \\ \hline
+                        196               & 0.298                               & 0.734                                & 1.118                                 \\ \hline
+                        225               & 0.237                               & 0.969                                & 1.159                                 \\ \hline
+                        256               & 0.189                               & 0.904                                & 1.179                                 \\ \hline
+                        289               & 0.175                               & 0.627                                & 1.194                                 \\ \hline
+                        324               & 0.143                               & 0.629                                & 1.115                                 \\ \hline
+                        361               & 0.123                               & 0.544                                & 1.305                                 \\ \hline
+                        400               & 0.110                               & 0.575                                & 1.210                                 \\ \hline
+                        441               & 0.102                               & 0.703                                & 1.134                                 \\ \hline
+                        484               & 0.085                               & 0.549                                & 1.140                                 \\ \hline
+                        529               & 0.075                               & 0.513                                & 1.069                                 \\ \hline
+                        \end{tabular}
+        \end{center}
+        \captionof{table}{A table of ratio of force calculation time to solver time} \label{fig:ratios}
+        \end{minipage}\hfill
+        \begin{minipage}[b]{.45\linewidth}
+                \centering
+                \includegraphics[width=1.1\linewidth]{ratios.png}
+                \captionof{figure}{Graph of ratio of force to solver time}% \caption{Figure caption}
+        \end{minipage}
+\end{figure}
+
+\begin{figure}
+        \begin{minipage}[b]{.45\linewidth}
+                \centering
+                \begin{center}
+                                \begin{tabular}{|c|c|c|c|} \hline
+                                \textbf{\# Nodes} & D / S & D / P & S / P \\ \hline
+                                64                & 1.072          & 0.806           & 0.752            \\ \hline 
+                                81                & 1.017          & 0.858           & 0.844            \\ \hline
+                                100               & 1.282          & 0.851           & 0.663            \\ \hline
+                                121               & 2.130          & 1.524           & 0.716            \\ \hline
+                                144               & 5.027          & 2.538           & 0.505            \\ \hline
+                                169               & 2.641          & 2.935           & 1.111            \\ \hline
+                                196               & 2.503          & 2.555           & 1.020            \\ \hline
+                                225               & 2.662          & 2.593           & 0.974            \\ \hline
+                                256               & 3.522          & 3.585           & 1.018            \\ \hline
+                                289               & 2.999          & 3.601           & 1.201            \\ \hline
+                                324               & 4.152          & 5.306           & 1.278            \\ \hline
+                                361               & 4.000          & 5.664           & 1.416            \\ \hline
+                                400               & 3.987          & 5.316           & 1.333            \\ \hline
+                                441               & 6.829          & 8.710           & 1.276            \\ \hline
+                                484               & 6.882          & 8.601           & 1.250            \\ \hline
+                                529               & 8.312          & 10.770          & 1.296            \\ \hline
+                                \end{tabular}
+                \end{center}
+                \captionof{table}{Simulation Speedups (D=Dense, S=Sparse, P=PARDISO)} 
+                \label{fig:speedups}
+        \end{minipage}\hfill
+        \begin{minipage}[b]{.45\linewidth}
+                \centering
+                \includegraphics[width=1.1\linewidth]{speedups.png}
+                \captionof{figure}{Graph of simulation speedups}% \caption{Figure caption}
+        \end{minipage}
+\end{figure}
+
+\twocolumn
 
 \section{Process}
  In the course of development for the cloth simulation, many amusing and interesting problems arose that I believe warrant discussion. In this section, I will provide a more in-depth explanantion of the implementation and highlight some key implementation details of the cloth simulation.
@@ -202,25 +352,30 @@ The mesh of the cloth is represented as a equilateral triangluar grid of particl
 
 \subsection{First iteration of the Discrete Elastic Plate / Shells Algorithm Implementation}
 
-My implementation of the DEP Algorithm started out as a transcription of a python implementation that we went over during class. I leveraged the Eigen Library (cite) to handle the linear algebra computations in the algorithm. All calculations used the DenseMatrix object (which internally leverages a 2D array of numbers, a contiguous chunk of floats/doubles in memory). For the solver, I directly solved the matrix using the built in Eigen solver (LDLT solver). The outputs were verified by running the same input with the python implementation and comparing the results. This method of verification proved effective, since it revealed the first issue. 
+My implementation of the DEP Algorithm started out as a transcription of a python implementation that we went over during class. I leveraged the Eigen Library \cite{eigen_library} to handle the linear algebra computations in the algorithm. All calculations used the DenseMatrix object (which internally leverages a 2D array of numbers, a contiguous chunk of floats/doubles in memory). For the solver, I directly solved the matrix using the built in Eigen solver (LDLT solver). The outputs were verified by running the same input with the python implementation and comparing the results. This method of verification proved effective, since it revealed the first issue. 
 
 My renderer defaulted to using float (single precision floating point numbers) for all of its calculations. That is a good decision because there was no need for precision in calculations and floats are only 4 bytes in size (the same as a int on most environments). However, upon closer inspection, the python implementation used double precision floats (8 bytes in size). This caused the results of the C++ implementation to be off by a small amount. The error was small enough that it was negligible for small values of n, but as n increased, the error accumulated and the results diverged. This was fixed by changing all the floats to doubles in the C++ implementation. Rendering still used floats, so I had to create a buffer that cast all the double values to floats before sending it to the GPU.
 
 As shown in the results, the performance of initial simulation was abysmal. Both steps of the simulation, the force/Jacobian calculation and the solver, started staggering when the cloth side length was about 13-14 nodes (588-675 DOFs). At this stage, the solver took about 65\% of the total CPU time, while the force calculation took about 17\%. I believed that these steps can be optimized with multi-threading, but that proved to be slightly wrong. 
 
-Eigen already allows users to enable multi-threading capabilities implemented for matrix arithmetic. However, for solving, it only supports multithreaded solves with sparse matrices (without additional extensions(cite)). In pursuit of this optimization, I changed the dense matrices involved in the calculation to use sparse matrices. As seen in the previous section, there was a speedup when this was implemented, which I will explain shortly. 
+Eigen already allows users to enable multi-threading capabilities implemented for matrix arithmetic. However, for solving, it only supports multithreaded solves with sparse matrices (without additional extensions \cite{eigen_library}). In pursuit of this optimization, I changed the dense matrices involved in the calculation to use sparse matrices. As seen in the previous section, there was a speedup when this was implemented, which I will explain shortly. 
 
 \subsection{Second iteration of the DEP/S Algorithm: Sparse Matrices and Multithreading}
 Sparse matrices are matrices that have a large number of zero values compared to the number of nonzero values. If we used a dense matrix to represent a sparse matrix, there would be a whole lot of wasted space in memory. Additionally, when calculating arithmetic, sparse matrices would take a long time with no value because most of the arithmetic operations would end up being zero. 
 
-To solve this issue, sparse matrix implementations usually involve only 3 arrays: One for the nonzero values, one for the row indices of the nonzero values in the matrix, and one for the indices(into the value array) of the first nonzero value in each row per column (see Fig (TODO)). This representation (also known as the Compressed Sparse Format) is much more compact, and because there are less elements to iterate through(skipping through all the zero values), the arithmetic operations and solving algorithms are faster. To create the sparse matrix, it is best to supply the constructor with an array of triplets (row, col, val) for each entry in the desired matrix. So I had to change the force calculations to append these elements to an existing array of triplets (a.k.a. sparse entries) for the Jacobian force matrix (the calculation of the hessians per edge/hinge are still done with fixed-size dense matrices). This method was fine since the bending jacobian and the stretching jacobian are added later in the algorithm and duplicate items in the sparse entry array are summed up. Using this scheme and changing the solver to use the Conjugate Gradient Iterative solver, I secured a 4x speedup (as seen in the above).
 
+To solve this issue, sparse matrix implementations usually involve only 3 arrays: One for the nonzero values, one for the row indices of the nonzero values in the matrix, and one for the indices(into the value array) of the first nonzero value in each row per column (see Fig \ref{fig:sparse_matrix}). This representation (also known as the Compressed Sparse Format) is much more compact, and because there are less elements to iterate through(skipping through all the zero values), the arithmetic operations and solving algorithms are faster. To create the sparse matrix, it is best to supply the constructor with an array of triplets (row, col, val) for each entry in the desired matrix. So I had to change the force calculations to append these elements to an existing array of triplets (a.k.a. sparse entries) for the Jacobian force matrix (the calculation of the hessians per edge/hinge are still done with fixed-size dense matrices). This method was fine since the bending jacobian and the stretching jacobian are added later in the algorithm and duplicate items in the sparse entry array are summed up. Using this scheme and changing the solver to use the Conjugate Gradient Iterative solver, I secured a 4x speedup (as seen in the above).
 
+\begin{figure}
+        \centering
+        \includegraphics[width=0.35\textwidth]{spmat.PNG}
+        \caption{A visual representation of a sparse matrix in the CSR format} \label{fig:sparse_matrix}
+\end{figure}
 
-I previously mentioned that multithreading Eigen would be a slightly wrong move. In my tests, Enabling Eigen's multithreading did not provide a significant speedup (or any at all). Some theories as to why this happened include: the fact that the matrix arithmetic operations exhibit false sharing (where two threads are writing to the same cache line, causing the cache to be invalidated and rewritten, which is a costly operation) or the overhead of creating threads being too large (implying that Eigen doesn't use a threadpool in its multithreading capabilities) (cite). In the final implementation of this stage, I just disabled Eigen's multithreading capabilities and let the solver run on a single thread, since it proved to be just as good as the multithreaded version. Note that it could be possible for me to multithread the calculation across hinges/edges (assign each thread a set of hinges/edges to calculate the forces/Jacobians), but I did not pursue this optimization due to time constraints.
+I previously mentioned that multithreading Eigen would be a slightly wrong move. In my tests, Enabling Eigen's multithreading did not provide a significant speedup (or any at all). Some theories as to why this happened include: the fact that the matrix arithmetic operations exhibit false sharing (where two threads are writing to the same cache line, causing the cache to be invalidated and rewritten, which is a costly operation) or the overhead of creating threads being too large (implying that Eigen doesn't use a threadpool in its multithreading capabilities) \cite{kernel_false_sharing}. In the final implementation of this stage, I just disabled Eigen's multithreading capabilities and let the solver run on a single thread, since it proved to be just as good as the multithreaded version. Note that it could be possible for me to multithread the calculation across hinges/edges (assign each thread a set of hinges/edges to calculate the forces/Jacobians), but I did not pursue this optimization due to time constraints.
 
-\subsection{Final Iteration of the DEP/S Algorithm: Pardiso Solver}
-The final iteration of the DEP/S algorithm involved integrating the PARDISO solver from Panua Technologies (cite 2). PARDISO is a direct solver that uses the parallel sparse LU factorization method to solve the matrix. In order to fully utilize PARDISO's potential, I had to change the underlying sparse matrix representation to only use the upper triangular part of the matrix, since the solver has optimizations for when the matrix is symmetric. This is implemented as a simple check before adding to the array of triplets (reject if col < row). Once the solver was integrated, the simulation experienced a 
+\subsection{Final Iteration of the DEP/S Algorithm: PARDISO Solver}
+The final iteration of the DEP/S algorithm involved integrating the PARDISO solver from Panua Technologies \cite{Pasadakis2023} \cite{EFTEKHARI2021101389} \cite{gaedkemerzhäuser2022}. PARDISO is a direct solver that uses the parallel sparse LU factorization method to solve the matrix. In order to fully utilize PARDISO's potential, I had to change the underlying sparse matrix representation to only use the upper triangular part of the matrix, since the solver has optimizations for when the matrix is symmetric. This is implemented as a simple check before adding to the array of triplets (reject if col < row). Once the solver was integrated, the simulation experienced a 
 
 \subsection{Rendering}
 The rendering of the cloth is simple. The cloth is rendered as a mesh of triangles, with each edge outlined with red lines. The fixed nodes of the simulation are highlighted with cyan (and the viewer can clearly see their effect on the rest of the points). In the underlying implementation, to go around the issue of memory alignment(more on this later), I keep track of two arrays of positions: one for the cloth simulation and one for rendering. After the positions are calculated, I copy the positions from the simulation array to the rendering array, and then send the rendering array buffer to the GPU to be rendered. The use of two arrays was a lapse in judgement on my part that I will explain later. 
@@ -234,7 +389,7 @@ The rendering of the cloth is simple. The cloth is rendered as a mesh of triangl
 
 
 \subsection{Subtlties in C++ and OpenGL}
-        I was caught up in a few subtlties in the C++ language and OpenGL. For instance, I spent a huge amount of time relearning what C++ templates are. I derived my cloth system from a particle system interface because I wanted to allow the user to specify different parameters per system. Using templates opens the particle system to extension, so the user can customize the parameters and logic to supply to the system. The implementation of this (especially debugging) proved to be more arduious than I thought. Because templates were expanded upon instantiation of the object (it was a template that gets expanded into a class), the line that had the error of code was not indicated in the debug logs. This design also proved to be a less effective than perceived, proving again that there are no zero cost abstractions (cite caruth). 
+        I was caught up in a few subtlties in the C++ language and OpenGL. For instance, I spent a huge amount of time relearning what C++ templates are. I derived my cloth system from a particle system interface because I wanted to allow the user to specify different parameters per system. Using templates opens the particle system to extension, so the user can customize the parameters and logic to supply to the system. The implementation of this (especially debugging) proved to be more arduious than I thought. Because templates were expanded upon instantiation of the object (it was a template that gets expanded into a class), the line that had the error of code was not indicated in the debug logs. This design also proved to be a less effective than perceived, supporting the idea that there are no zero cost abstractions \cite{caruth2019}. 
 
         Another subtlety I ran into was memory alignment issues in OpenGL. To start, the DEP algorithm assumes that the DOF vector is a $ 3 \times n $ by $ 1 $ column vector, where $n$ is the number of vertices. My initial naive implementation consisted of an array of 3 by n floats to represent the DOF vector used for calculating the forces and use the same DOF vector for drawing (specifying the vertex format to assume a vertex stream of vec3). This would work if I didn't use my DOF vector in the other (compute/debug) shaders (specifying the DOF vector as a shader buffer storage object (SSBO)).
 
@@ -244,7 +399,7 @@ The rendering of the cloth is simple. The cloth is rendered as a mesh of triangl
 
         There is another solution to this issue without aligning the DOF vector to 16 bytes. Instead of having the GPU read the buffer as an array of vec4s/vec3s, I could pass the buffer to the GPU as an array of floats (avoiding the alignment issue entirely). Then the vertex stream for rendering for the shaders (specifically the highlight shader since the DOF positions must be read as a SSBO instead of a vertex stream) would be the indices of the particles themselves. Then in the shader, I could use the particle indices to compute the indices of the components of each DOF for that particle. 
 
-        To add on to this, OpenGL actually allows the user to pass an array of doubles in as a vertex stream (cite that stupid call). This means I did not even need to cast the DOF vector from double to float before sending it to the GPU. The cast would still need to be done in the vertex shader since the vertex shader output for positions (\texttt{gl\_Position}) is specified as a float type. I unfortunately realized this too late, therefore it is not implemented. 
+        To add on to this, OpenGL actually allows the user to pass an array of doubles in as a vertex stream using \texttt{glVertexAttribLFormat} \cite{opengl_documentation} . This means I did not even need to cast the DOF vector from double to float before sending it to the GPU. The cast would still need to be done in the vertex shader since the vertex shader output for positions (\texttt{gl\_Position}) is specified as a float type. I unfortunately realized this too late, therefore it is not implemented. 
 
         Finally, I initially proposed to use OpenGL compute shaders to do the simulation on the GPU. The DEP algorithm (save for the matrix solve) is embarassingly parallelizable, so it would be a good candidate for a compute shader. However, OpenGL does not support matrix operations beyond 4 by 4 dimensions, which means I would need to implement this myself. The conjugate gradient solve is also a parallelizable operation, but this requires significant time to debug (and GPU debugging is much different than CPU debugging since there is no way to step through programs). I concluded that this is a huge undertaking, so I decided to stick with the CPU implementation.
 

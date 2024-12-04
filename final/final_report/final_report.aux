@@ -10,22 +10,46 @@
 \citation{terzopoulos1987elastically}
 \citation{jawedlimdiscrete}
 \citation{baraff1998large}
+\providecommand \oddpage@label [2]{}
 \@writefile{toc}{\contentsline {section}{\numberline {I}Overview}{1}{section.1}\protected@file@percent }
 \citation{jawedlimdiscrete}
 \citation{jawedlimdiscrete}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Discrete Elastic Plates}}{2}{algorithm.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {section}{\numberline {II}Results}{3}{section.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {III}Process}{3}{section.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {III-A}Cloth Mesh Creation and Parameterization}{3}{subsection.3.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {III-B}First iteration of the Discrete Elastic Plate / Shells Algorithm Implementation}{3}{subsection.3.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {III-C}Second iteration of the DEP/S Algorithm: Sparse Matrices and Multithreading}{3}{subsection.3.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {III-D}Final Iteration of the DEP/S Algorithm: Pardiso Solver}{4}{subsection.3.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {III-E}Rendering}{4}{subsection.3.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {IV}Issues}{4}{section.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {IV-A}Renderer Design}{4}{subsection.4.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {IV-B}Subtlties in C++ and OpenGL}{4}{subsection.4.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {IV-C}Eigen's implementation of sparse matrices}{5}{subsection.4.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces A table of plate properties per side length \#}}{4}{figure.caption.1}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{fig:plateproperties}{{1}{4}{A table of plate properties per side length \#}{figure.caption.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {I}{\ignorespaces A table of average frame times (ms/frame) per plate per simulation }}{4}{figure.caption.1}\protected@file@percent }
+\newlabel{fig:frametimes}{{I}{4}{A table of average frame times (ms/frame) per plate per simulation}{figure.caption.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Graph of average frame times per simulation}}{4}{figure.caption.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {II}{\ignorespaces A table of ratio of force calculation time to solver time}}{5}{figure.caption.2}\protected@file@percent }
+\newlabel{fig:ratios}{{II}{5}{A table of ratio of force calculation time to solver time}{figure.caption.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Graph of ratio of force to solver time}}{5}{figure.caption.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {III}{\ignorespaces Simulation Speedups (D=Dense, S=Sparse, P=PARDISO)}}{5}{figure.caption.3}\protected@file@percent }
+\newlabel{fig:speedups}{{III}{5}{Simulation Speedups (D=Dense, S=Sparse, P=PARDISO)}{figure.caption.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Graph of simulation speedups}}{5}{figure.caption.3}\protected@file@percent }
+\citation{eigen_library}
+\citation{eigen_library}
+\citation{kernel_false_sharing}
+\@writefile{toc}{\contentsline {section}{\numberline {III}Process}{6}{section.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-A}Cloth Mesh Creation and Parameterization}{6}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-B}First iteration of the Discrete Elastic Plate / Shells Algorithm Implementation}{6}{subsection.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces A visual representation of a sparse matrix in the CSR format}}{6}{figure.caption.4}\protected@file@percent }
+\newlabel{fig:sparse_matrix}{{5}{6}{A visual representation of a sparse matrix in the CSR format}{figure.caption.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-C}Second iteration of the DEP/S Algorithm: Sparse Matrices and Multithreading}{6}{subsection.3.3}\protected@file@percent }
+\citation{Pasadakis2023}
+\citation{EFTEKHARI2021101389}
+\citation{gaedkemerzhäuser2022}
+\citation{caruth2019}
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-D}Final Iteration of the DEP/S Algorithm: PARDISO Solver}{7}{subsection.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {III-E}Rendering}{7}{subsection.3.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {IV}Issues}{7}{section.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {IV-A}Renderer Design}{7}{subsection.4.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {IV-B}Subtlties in C++ and OpenGL}{7}{subsection.4.2}\protected@file@percent }
+\citation{opengl_documentation}
 \citation{Tamstorf2013discrete}
+\@writefile{toc}{\contentsline {subsection}{\numberline {IV-C}Eigen's implementation of sparse matrices}{8}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {IV-D}Degeneracies}{8}{subsection.4.4}\protected@file@percent }
 \bibstyle{ieeetr}
 \bibdata{refs}
 \bibcite{baraff1998large}{1}
@@ -35,8 +59,14 @@
 \bibcite{provot1995deformation}{5}
 \bibcite{terzopoulos1987elastically}{6}
 \bibcite{jawedlimdiscrete}{7}
-\@writefile{toc}{\contentsline {subsection}{\numberline {IV-D}Degeneracies}{6}{subsection.4.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {V}Remarks}{6}{section.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {VI}Conclusion}{6}{section.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{References}{6}{section*.1}\protected@file@percent }
-\gdef \@abspage@last{6}
+\bibcite{eigen_library}{8}
+\bibcite{kernel_false_sharing}{9}
+\bibcite{Pasadakis2023}{10}
+\bibcite{EFTEKHARI2021101389}{11}
+\bibcite{gaedkemerzhäuser2022}{12}
+\bibcite{caruth2019}{13}
+\bibcite{opengl_documentation}{14}
+\@writefile{toc}{\contentsline {section}{\numberline {V}Remarks}{9}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {VI}Conclusion}{9}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{References}{9}{section*.5}\protected@file@percent }
+\gdef \@abspage@last{9}
