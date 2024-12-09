@@ -189,11 +189,11 @@ In my initial proposal, I posed a few questions I would like my project to answe
 This is a lot of questions, so I will organize the report into 3 sections: Results, Process, and Issues. 
 
 \section{Results}
-I tested my simulation on an AMD Ryzen 9 7900 (with integrated graphics). The configuration of the mesh was akin to that of a table cloth (see figure \ref{fig:tablecloth}) with $\Delta t = 0.01, l_k = 0.1, m^{tot} = 0.01, g = 9.81, Y=1.0\times 10^7, h = 0.001$. There are three iterations of my simulation: a dense matrix version, a sparse matrix version, and PARDISO solver version. A table of the data collected can be seen in tables \ref{fig:plateproperties}, \ref{fig:frametimes}, \ref{fig:ratios}, and \ref{fig:speedups}. The data is displayed on a graph in Fig. \ref{fig:frametimesgraph}, \ref{fig:ratiosgraph}, and \ref{fig:speedupsgraph}. As one can see, each version's frame times are vary widely, each incurring improvement over the next. 
+I tested my simulation on an AMD Ryzen 9 7900 (with integrated graphics). The configuration of the mesh was akin to that of a table cloth (see figure \ref{fig:tablecloth}) with $\Delta t = 0.01, 0.005, l_k = 0.1, m^{tot} = 0.01, g = 9.81, Y=1.0\times 10^5, h = 0.001$. There are three iterations of my simulation: a dense matrix version, a sparse matrix version, and PARDISO solver version. A table of the data collected can be seen in tables \ref{fig:plateproperties}, \ref{fig:frametimes}, \ref{fig:ratios}, and \ref{fig:speedups}. The data is displayed on a graph in Fig. \ref{fig:frametimesgraph}, \ref{fig:ratiosgraph}, and \ref{fig:speedupsgraph}. As one can see, each version's frame times are vary widely, each incurring improvement over the next. 
 
-Using the dense matrix version as a base, the sparse matrix incurred an $8\times$ speedup and the PARDISO solver version incurred a $10\times$ max speedup. These speedups are drastic and just goes to show how much dense matrices can be a bottleneck in the simulation. Comparing the sparse matrix version to the PARDISO solver version, the PARDISO solver version is at least $1.3\times$ faster than the sparse matrix version. This is expected since the PARDISO solver is more specialized towards solving the symmetric sparse matrices that the DEP algorithm produces.
+Using the dense matrix version as a base, the sparse matrix incurred an $21\times$ speedup and the PARDISO solver version incurred a $18\times$ max speedup. These speedups are drastic and just goes to show how much dense matrices can be a bottleneck in the simulation. Comparing the sparse matrix version to the PARDISO solver version, the PARDISO solver version is actually $0.9\times$ slower than the sparse matrix version. But when testing on even larger numbers of DOFs, the PARDISO version becomes at least $1.3\times$ faster than the sparse matrix version at about 1600 nodes (4800 DOFs). This is expected since the PARDISO solver is more specialized towards solving the symmetric sparse matrices that the DEP algorithm produces and the solver is not the significant bottleneck until the number of DOFs becomes very large.
 
-The graphs also tell a telling story, the dense matrix version frame time grows consistently with the predicted $O(n^3)$ time complexity (mostly from the matrix solve), breaking 800ms per frame at 529 nodes. The sparse matrix and PARDISO solver versions grow at a much flatter linear-like rate, with the PARDISO solver breaking 81ms per frame at 529 nodes compared to the sparse matrix version's 87ms per frame.
+The graphs also tell a telling story, the dense matrix version frame time grows consistently with the predicted $O(n^3)$ time complexity (mostly from the matrix solve), breaking 800ms per frame at 529 nodes. The sparse matrix and PARDISO solver versions grow at a much flatter linear-like rate, with the PARDISO solver and sparse matric both maintaining 40 ms at 21 nodes.
 
 Finally, it is worth mentioning that the ratio between the force calculation time and the solver time was consistently less than 1 after 81 nodes. This further proves that the solver is the bottleneck of the simulation in that version. On both the sparse matrix and PARDISO solver versions, the ratio rose and fell. This suggests that starting with a small number of nodes, the solver produced enough overhead that made it slower than the force calculation, but as the number of nodes increased, the force calculation became the bottleneck. This would not last long when the number of nodes increases even further, we are introduced to the solver bottleneck again.
 
@@ -215,6 +215,24 @@ Eigen already allows users to enable multi-threading capabilities implemented fo
 
 \subsection{Second iteration of the DEP/S Algorithm: Sparse Matrices and Multithreading}
 Sparse matrices are matrices that have a large number of zero values compared to the number of nonzero values. If we used a dense matrix to represent a sparse matrix, there would be a whole lot of wasted space in memory. Additionally, when calculating arithmetic, sparse matrices would take a long time with no value because most of the arithmetic operations would end up being zero. 
+
+To solve this issue, sparse matrix implementations usually involve only 3 arrays: One for the nonzero values, one for the row indices of the nonzero values in the matrix, and one for the indices(into the value array) of the first nonzero value in each row per column (see Fig \ref{fig:sparse_matrix}). This representation (also known as the Compressed Sparse Format) is much more compact, and because there are less elements to iterate through(skipping through all the zero values), the arithmetic operations and solving algorithms are faster. To create the sparse matrix, it is best to supply the constructor with an array of triplets (row, col, val) for each entry in the desired matrix. So I had to change the force calculations to append these elements to an existing array of triplets (a.k.a. sparse entries) for the Jacobian force matrix (the calculation of the hessians per edge/hinge are still done with fixed-size dense matrices). This method was fine since the bending jacobian and the stretching jacobian are added later in the algorithm and duplicate items in the sparse entry array are summed up. Using this scheme and changing the solver to use the Conjugate Gradient Iterative solver, I secured a max $21\times$ speedup (as seen in the above).
+
+I previously mentioned that multithreading Eigen would be a slightly wrong move. In my tests, Enabling Eigen's multithreading did not provide a significant speedup (or any at all). Some theories as to why this happened include: the fact that the matrix arithmetic operations exhibit false sharing (where two threads are writing to the same cache line, causing the cache to be invalidated and rewritten, which is a costly operation) or the overhead of creating threads being too large (implying that Eigen doesn't use a threadpool in its multithreading capabilities) \cite{kernel_false_sharing}. In the final implementation of this stage, I just disabled Eigen's multithreading capabilities and let the solver run on a single thread, since it proved to be just as good as the multithreaded version. Note that it could be possible for me to multithread the calculation across hinges/edges (assign each thread a set of hinges/edges to calculate the forces/Jacobians), but I did not pursue this optimization due to time constraints.
+
+\subsection{Final Iteration of the DEP/S Algorithm: PARDISO Solver}
+The final iteration of the DEP/S algorithm involved integrating the PARDISO solver from Panua Technologies \cite{Pasadakis2023} \cite{EFTEKHARI2021101389} \cite{gaedkemerzhäuser2022}. PARDISO is a direct solver that uses the parallel sparse LU factorization method to solve the matrix. In order to fully utilize PARDISO's potential, I had to change the underlying sparse matrix representation to only use the upper triangular part of the matrix, since the solver has optimizations for when the matrix is symmetric. This is implemented as a simple check before adding to the array of triplets (reject if col < row). Once the solver was integrated, the simulation experienced a slight speedup (presentfor large node numbers because the solver takes more time then), about $1.2\times$.
+
+\subsection{Rendering}
+The rendering of the cloth is simple. The cloth is rendered as a mesh of triangles, with each edge outlined with red lines. The fixed nodes of the simulation are highlighted with cyan (and the viewer can clearly see their effect on the rest of the points). In the underlying implementation, to go around the issue of memory alignment(more on this later), I keep track of two arrays of positions: one for the cloth simulation and one for rendering. After the positions are calculated, I copy the positions from the simulation array to the rendering array, and then send the rendering array buffer to the GPU to be rendered. The use of two arrays was a lapse in judgement on my part that I will explain later. 
+
+
+\section{Issues}
+        I encountered numerous amounts of problems as I implemented the cloth simulation. Unlike problems I would like to answer with this project, these are issues that hindered my progress and/or still exist in the project. I will discuss the issues in the order that they were encountered.
+
+\subsection{Renderer Design}
+        As I was developing the cloth simulation, I realized that my renderer implementation was brittle, because it was coupled. The initial idea of my renderer design was that the client would first pass in a Scene object into a render call, then the renderer would call the OpenGL draw calls for each of the primitives in the scene. In OpenGL (which could be contextualized as an highly configurable state machine), one must supply state to the OpenGL context before a draw call is executed. The usual state for draws (which is bound to the context) includes the shader programs to be executed on the GPU, the vertex array objects specifying the format of the vertex data, the buffers containing the vertex data (the positions, the indices to those positions if using indexed rendering), and other buffers/data that the shaders need. The key point here is that the vertex array object had to be created for every known object type in my renderer because each new object had vertex data in different formats. Because I elected to have the renderer responsible for all drawing of the primitives, I stored all the vertex array objects for each type there. So if I had to add a new object type (like my cloth), I was forced to modify the renderer class as well. This directly goes against the idea of the Open-Closed Principle in software design. Some solutions to this include: using a visitor design pattern to render the objects, so that the renderer uses the common interface to render the objects, use a entity component system to separate the rendering logic from the object data, or use a factory pattern to create the vertex array objects for the objects and defining rendering logic for each object type.
+
 
 \onecolumn
 \begin{figure}
@@ -256,31 +274,31 @@ Sparse matrices are matrices that have a large number of zero values compared to
         \begin{minipage}[b]{.45\linewidth}
                 \begin{center}
                         \begin{tabular}{|c|c|c|c|}
-                        \hline
-                        \textbf{\# Nodes} & \textbf{Dense} & \textbf{Sparse} & \textbf{PARDISO} \\ \hline
-                        4                 & 2.14568        & 1.9417          & 1.97905          \\ \hline
-                        9                 & 2.09046        & 1.86291         & 2.07927          \\ \hline
-                        16                & 2.19543        & 1.87658         & 1.90431          \\ \hline
-                        25                & 2.26691        & 1.9805          & 2.17057          \\ \hline
-                        36                & 2.32498        & 2.02624         & 2.2378           \\ \hline
-                        49                & 2.26632        & 2.17572         & 2.42311          \\ \hline
-                        64                & 2.55798        & 2.38529         & 3.17389          \\ \hline
-                        81                & 3.13174        & 3.07915         & 3.64856          \\ \hline
-                        100               & 4.36049        & 3.40046         & 5.1266           \\ \hline
-                        121               & 10.8998        & 5.11832         & 7.15082          \\ \hline
-                        144               & 29.2132        & 5.81131         & 11.5085          \\ \hline
-                        169               & 38.4439        & 14.5564         & 13.0989          \\ \hline
-                        196               & 58.0018        & 23.1701         & 22.7056          \\ \hline
-                        225               & 72.0361        & 27.0657         & 27.7778          \\ \hline
-                        256               & 117.31         & 33.3114         & 32.7209          \\ \hline
-                        289               & 133.053        & 44.3635         & 36.9456          \\ \hline
-                        324               & 210.592        & 50.7165         & 39.6869          \\ \hline
-                        361               & 266.549        & 66.6435         & 47.0635          \\ \hline
-                        400               & 323.052        & 81.0222         & 60.7701          \\ \hline
-                        441               & 574.367        & 84.1108         & 65.9397          \\ \hline
-                        484               & 638.038        & 92.7115         & 74.1809          \\ \hline
-                        529               & 873.053        & 105.039         & 81.0643          \\ \hline
-                        \end{tabular}
+                                \hline
+                                \textbf{Total Nodes} & \textbf{Dense} & \textbf{Sparse} & \textbf{Pardiso} \\ \hline
+                                4                    & 2.146          & 1.285           & 1.069            \\ \hline
+                                9                    & 2.090          & 1.279           & 1.061            \\ \hline
+                                16                   & 2.195          & 1.296           & 1.087            \\ \hline
+                                25                   & 2.267          & 1.282           & 1.197            \\ \hline
+                                36                   & 2.325          & 1.288           & 1.348            \\ \hline
+                                49                   & 2.266          & 1.343           & 1.735            \\ \hline
+                                64                   & 2.558          & 1.524           & 1.987            \\ \hline
+                                81                   & 3.132          & 1.914           & 4.185            \\ \hline
+                                100                  & 4.360          & 2.447           & 6.604            \\ \hline
+                                121                  & 10.900         & 4.367           & 7.246            \\ \hline
+                                144                  & 29.213         & 6.411           & 8.631            \\ \hline
+                                169                  & 38.444         & 7.911           & 9.855            \\ \hline
+                                196                  & 58.002         & 9.171           & 11.897           \\ \hline
+                                225                  & 72.036         & 11.443          & 13.312           \\ \hline
+                                256                  & 117.310        & 12.544          & 15.576           \\ \hline
+                                289                  & 133.053        & 15.646          & 18.393           \\ \hline
+                                324                  & 210.592        & 18.158          & 20.049           \\ \hline
+                                361                  & 266.549        & 21.310          & 24.682           \\ \hline
+                                400                  & 323.052        & 24.533          & 28.622           \\ \hline
+                                441                  & 574.367        & 29.980          & 33.337           \\ \hline
+                                484                  & 638.038        & 34.320          & 37.842           \\ \hline
+                                529                  & 873.053        & 40.172          & 46.736           \\ \hline
+                                \end{tabular}
                 \end{center}
                 \captionof{table}{A table of average frame times (ms/frame) per plate per simulation } \label{fig:frametimes}
         \end{minipage}\hfill
@@ -294,32 +312,32 @@ Sparse matrices are matrices that have a large number of zero values compared to
 \begin{figure}
         \begin{minipage}[b]{.45\linewidth}
                 \begin{center}
-                        \begin{tabular}{|c|c|c|c|}
-                        \hline
-                        \textbf{\# Nodes} & \multicolumn{1}{c|}{\textbf{Dense}} & \multicolumn{1}{c|}{\textbf{Sparse}} & \multicolumn{1}{c|}{\textbf{PARDISO}} \\ \hline
-                        4                 & 1.189                               & 1.178                                & 0.031                                 \\ \hline
-                        9                 & 4.007                               & 0.328                                & 0.124                                 \\ \hline
-                        16                & 3.856                               & 2.932                                & 0.323                                 \\ \hline
-                        25                & 3.166                               & 1.867                                & 0.468                                 \\ \hline
-                        36                & 2.496                               & 1.728                                & 0.649                                 \\ \hline
-                        49                & 1.726                               & 1.521                                & 0.741                                 \\ \hline
-                        64                & 1.294                               & 1.145                                & 0.862                                 \\ \hline
-                        81                & 0.982                               & 1.223                                & 0.912                                 \\ \hline
-                        100               & 0.689                               & 0.955                                & 0.880                                 \\ \hline
-                        121               & 0.565                               & 0.895                                & 1.007                                 \\ \hline
-                        144               & 0.448                               & 0.827                                & 1.131                                 \\ \hline
-                        169               & 0.322                               & 0.891                                & 1.101                                 \\ \hline
-                        196               & 0.298                               & 0.734                                & 1.118                                 \\ \hline
-                        225               & 0.237                               & 0.969                                & 1.159                                 \\ \hline
-                        256               & 0.189                               & 0.904                                & 1.179                                 \\ \hline
-                        289               & 0.175                               & 0.627                                & 1.194                                 \\ \hline
-                        324               & 0.143                               & 0.629                                & 1.115                                 \\ \hline
-                        361               & 0.123                               & 0.544                                & 1.305                                 \\ \hline
-                        400               & 0.110                               & 0.575                                & 1.210                                 \\ \hline
-                        441               & 0.102                               & 0.703                                & 1.134                                 \\ \hline
-                        484               & 0.085                               & 0.549                                & 1.140                                 \\ \hline
-                        529               & 0.075                               & 0.513                                & 1.069                                 \\ \hline
-                        \end{tabular}
+                        \begin{tabular}{|c|l|l|l|}
+                                \hline
+                                \textbf{Total Nodes} & \multicolumn{1}{c|}{\textbf{Dense}} & \multicolumn{1}{c|}{\textbf{Sparse}} & \multicolumn{1}{c|}{\textbf{Pardiso}} \\ \hline
+                                4                    & 1.189                               & 1.293                                & 0.050                                 \\ \hline
+                                9                    & 4.007                               & 3.259                                & 0.171                                 \\ \hline
+                                16                   & 3.856                               & 3.638                                & 0.360                                 \\ \hline
+                                25                   & 3.166                               & 2.644                                & 0.548                                 \\ \hline
+                                36                   & 2.496                               & 2.387                                & 0.670                                 \\ \hline
+                                49                   & 1.726                               & 2.171                                & 0.679                                 \\ \hline
+                                64                   & 1.294                               & 1.774                                & 0.863                                 \\ \hline
+                                81                   & 0.982                               & 1.895                                & 0.915                                 \\ \hline
+                                100                  & 0.689                               & 1.786                                & 0.930                                 \\ \hline
+                                121                  & 0.565                               & 1.710                                & 1.047                                 \\ \hline
+                                144                  & 0.448                               & 1.615                                & 1.093                                 \\ \hline
+                                169                  & 0.322                               & 1.644                                & 1.121                                 \\ \hline
+                                196                  & 0.298                               & 1.505                                & 1.158                                 \\ \hline
+                                225                  & 0.237                               & 1.512                                & 1.199                                 \\ \hline
+                                256                  & 0.189                               & 1.396                                & 1.217                                 \\ \hline
+                                289                  & 0.175                               & 1.184                                & 1.253                                 \\ \hline
+                                324                  & 0.143                               & 1.164                                & 1.226                                 \\ \hline
+                                361                  & 0.123                               & 1.088                                & 1.334                                 \\ \hline
+                                400                  & 0.110                               & 1.016                                & 1.231                                 \\ \hline
+                                441                  & 0.102                               & 1.055                                & 1.183                                 \\ \hline
+                                484                  & 0.085                               & 1.007                                & 1.185                                 \\ \hline
+                                529                  & 0.075                               & 0.946                                & 1.094                                 \\ \hline
+                                \end{tabular}
         \end{center}
         \captionof{table}{A table of ratio of force calculation time to solver time} \label{fig:ratios}
         \end{minipage}\hfill
@@ -334,25 +352,26 @@ Sparse matrices are matrices that have a large number of zero values compared to
         \begin{minipage}[b]{.45\linewidth}
                 \centering
                 \begin{center}
-                                \begin{tabular}{|c|c|c|c|} \hline
-                                \textbf{\# Nodes} & D / S & D / P & S / P \\ \hline
-                                64                & 1.072          & 0.806           & 0.752            \\ \hline 
-                                81                & 1.017          & 0.858           & 0.844            \\ \hline
-                                100               & 1.282          & 0.851           & 0.663            \\ \hline
-                                121               & 2.130          & 1.524           & 0.716            \\ \hline
-                                144               & 5.027          & 2.538           & 0.505            \\ \hline
-                                169               & 2.641          & 2.935           & 1.111            \\ \hline
-                                196               & 2.503          & 2.555           & 1.020            \\ \hline
-                                225               & 2.662          & 2.593           & 0.974            \\ \hline
-                                256               & 3.522          & 3.585           & 1.018            \\ \hline
-                                289               & 2.999          & 3.601           & 1.201            \\ \hline
-                                324               & 4.152          & 5.306           & 1.278            \\ \hline
-                                361               & 4.000          & 5.664           & 1.416            \\ \hline
-                                400               & 3.987          & 5.316           & 1.333            \\ \hline
-                                441               & 6.829          & 8.710           & 1.276            \\ \hline
-                                484               & 6.882          & 8.601           & 1.250            \\ \hline
-                                529               & 8.312          & 10.770          & 1.296            \\ \hline
-                                \end{tabular}
+                        \begin{tabular}{|c|c|c|c|}
+                                \hline
+                                \textbf{\# Nodes} & \textbf{D / S} & \textbf{D / P} & \textbf{S / P} \\ \hline
+                                64                & 1.288                   & 0.767                    & 1.679                     \\ \hline
+                                81                & 0.748                   & 0.457                    & 1.636                     \\ \hline
+                                100               & 0.660                   & 0.370                    & 1.782                     \\ \hline
+                                121               & 1.504                   & 0.603                    & 2.496                     \\ \hline
+                                144               & 3.385                   & 0.743                    & 4.557                     \\ \hline
+                                169               & 3.901                   & 0.803                    & 4.859                     \\ \hline
+                                196               & 4.875                   & 0.771                    & 6.325                     \\ \hline
+                                225               & 5.411                   & 0.860                    & 6.295                     \\ \hline
+                                256               & 7.532                   & 0.805                    & 9.352                     \\ \hline
+                                289               & 7.234                   & 0.851                    & 8.504                     \\ \hline
+                                324               & 10.504                  & 0.906                    & 11.598                    \\ \hline
+                                361               & 10.799                  & 0.863                    & 12.508                    \\ \hline
+                                400               & 11.287                  & 0.857                    & 13.168                    \\ \hline
+                                441               & 17.229                  & 0.899                    & 19.158                    \\ \hline
+                                484               & 16.861                  & 0.907                    & 18.591                    \\ \hline
+                                529               & 18.681                  & 0.860                    & 21.733                    \\ \hline
+                        \end{tabular}
                 \end{center}
                 \captionof{table}{Simulation Speedups (D=Dense, S=Sparse, P=PARDISO)} 
                 \label{fig:speedups}
@@ -366,7 +385,6 @@ Sparse matrices are matrices that have a large number of zero values compared to
 
 \twocolumn
 
-To solve this issue, sparse matrix implementations usually involve only 3 arrays: One for the nonzero values, one for the row indices of the nonzero values in the matrix, and one for the indices(into the value array) of the first nonzero value in each row per column (see Fig \ref{fig:sparse_matrix}). This representation (also known as the Compressed Sparse Format) is much more compact, and because there are less elements to iterate through(skipping through all the zero values), the arithmetic operations and solving algorithms are faster. To create the sparse matrix, it is best to supply the constructor with an array of triplets (row, col, val) for each entry in the desired matrix. So I had to change the force calculations to append these elements to an existing array of triplets (a.k.a. sparse entries) for the Jacobian force matrix (the calculation of the hessians per edge/hinge are still done with fixed-size dense matrices). This method was fine since the bending jacobian and the stretching jacobian are added later in the algorithm and duplicate items in the sparse entry array are summed up. Using this scheme and changing the solver to use the Conjugate Gradient Iterative solver, I secured a 4x speedup (as seen in the above).
 
 \begin{figure}
         \centering
@@ -374,20 +392,8 @@ To solve this issue, sparse matrix implementations usually involve only 3 arrays
         \caption{A visual representation of a sparse matrix in the CSR format} \label{fig:sparse_matrix}
 \end{figure}
 
-I previously mentioned that multithreading Eigen would be a slightly wrong move. In my tests, Enabling Eigen's multithreading did not provide a significant speedup (or any at all). Some theories as to why this happened include: the fact that the matrix arithmetic operations exhibit false sharing (where two threads are writing to the same cache line, causing the cache to be invalidated and rewritten, which is a costly operation) or the overhead of creating threads being too large (implying that Eigen doesn't use a threadpool in its multithreading capabilities) \cite{kernel_false_sharing}. In the final implementation of this stage, I just disabled Eigen's multithreading capabilities and let the solver run on a single thread, since it proved to be just as good as the multithreaded version. Note that it could be possible for me to multithread the calculation across hinges/edges (assign each thread a set of hinges/edges to calculate the forces/Jacobians), but I did not pursue this optimization due to time constraints.
-
-\subsection{Final Iteration of the DEP/S Algorithm: PARDISO Solver}
-The final iteration of the DEP/S algorithm involved integrating the PARDISO solver from Panua Technologies \cite{Pasadakis2023} \cite{EFTEKHARI2021101389} \cite{gaedkemerzhäuser2022}. PARDISO is a direct solver that uses the parallel sparse LU factorization method to solve the matrix. In order to fully utilize PARDISO's potential, I had to change the underlying sparse matrix representation to only use the upper triangular part of the matrix, since the solver has optimizations for when the matrix is symmetric. This is implemented as a simple check before adding to the array of triplets (reject if col < row). Once the solver was integrated, the simulation experienced a 
-
-\subsection{Rendering}
-The rendering of the cloth is simple. The cloth is rendered as a mesh of triangles, with each edge outlined with red lines. The fixed nodes of the simulation are highlighted with cyan (and the viewer can clearly see their effect on the rest of the points). In the underlying implementation, to go around the issue of memory alignment(more on this later), I keep track of two arrays of positions: one for the cloth simulation and one for rendering. After the positions are calculated, I copy the positions from the simulation array to the rendering array, and then send the rendering array buffer to the GPU to be rendered. The use of two arrays was a lapse in judgement on my part that I will explain later. 
 
 
-\section{Issues}
-        I encountered numerous amounts of problems as I implemented the cloth simulation. Unlike problems I would like to answer with this project, these are issues that hindered my progress and/or still exist in the project. I will discuss the issues in the order that they were encountered.
-
-\subsection{Renderer Design}
-        As I was developing the cloth simulation, I realized that my renderer implementation was brittle, because it was coupled. The initial idea of my renderer design was that the client would first pass in a Scene object into a render call, then the renderer would call the OpenGL draw calls for each of the primitives in the scene. In OpenGL (which could be contextualized as an highly configurable state machine), one must supply state to the OpenGL context before a draw call is executed. The usual state for draws (which is bound to the context) includes the shader programs to be executed on the GPU, the vertex array objects specifying the format of the vertex data, the buffers containing the vertex data (the positions, the indices to those positions if using indexed rendering), and other buffers/data that the shaders need. The key point here is that the vertex array object had to be created for every known object type in my renderer because each new object had vertex data in different formats. Because I elected to have the renderer responsible for all drawing of the primitives, I stored all the vertex array objects for each type there. So if I had to add a new object type (like my cloth), I was forced to modify the renderer class as well. This directly goes against the idea of the Open-Closed Principle in software design. Some solutions to this include: using a visitor design pattern to render the objects, so that the renderer uses the common interface to render the objects, use a entity component system to separate the rendering logic from the object data, or use a factory pattern to create the vertex array objects for the objects and defining rendering logic for each object type.
 
 
 \subsection{Subtlties in C++ and OpenGL}

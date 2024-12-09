@@ -1,14 +1,14 @@
 # Fdb version 4
-["bibtex final_report"] 1733285286.36294 "final_report.aux" "final_report.bbl" "final_report" 1733285568.57412 0
+["bibtex final_report"] 1733719943.75124 "final_report.aux" "final_report.bbl" "final_report" 1733719947.42327 0
   "./refs.bib" 1733270685 15173 b073869fe26b5d18c854028cc1266afd ""
   "c:/texlive/2024/texmf-dist/bibtex/bst/base/ieeetr.bst" 1729235124 18361 1a00e58565e7f19bf2b3e1bfb82254ae ""
-  "final_report.aux" 1733285568 6268 92b4964afdc865326b4401869a8d5d12 "pdflatex"
+  "final_report.aux" 1733719946 6268 eef95db1112f29cfd8a2b967fd675f9e "pdflatex"
   (generated)
   "final_report.bbl"
   "final_report.blg"
   (rewritten before read)
-["pdflatex"] 1733285565.1691 "c:/Users/Alien/Documents/mae-263f/final/final_report/final_report.tex" "final_report.pdf" "final_report" 1733285568.57445 0
-  "c:/Users/Alien/Documents/mae-263f/final/final_report/final_report.tex" 1733285564 51229 c73d07b15dd614da3d86ac20026ca972 ""
+["pdflatex"] 1733719943.99199 "c:/Users/Alien/Documents/mae-263f/final/final_report/final_report.tex" "final_report.pdf" "final_report" 1733719947.4236 0
+  "c:/Users/Alien/Documents/mae-263f/final/final_report/final_report.tex" 1733719939 52601 0398fd06fab18e68a9eec3d67a11d823 ""
   "c:/texlive/2024/texmf-dist/fonts/enc/dvips/base/8r.enc" 1729236109 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "c:/texlive/2024/texmf-dist/fonts/map/fontname/texfonts.map" 1729236646 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "c:/texlive/2024/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm" 1729235757 960 379cc0019370a9e0208a0a3f949f847a ""
@@ -129,14 +129,14 @@
   "chaos1.PNG" 1733285191 807137 6461341ee2660a83be1b18ca7d122fe0 ""
   "cloth1.PNG" 1733284857 155152 33ee90f371c805f27231f8b4ce3d1a3d ""
   "cloth2.PNG" 1733284215 104432 bea61eb222f4bd9fbea1f36535016ae9 ""
-  "final_report.aux" 1733285568 6268 92b4964afdc865326b4401869a8d5d12 "pdflatex"
-  "final_report.bbl" 1733285286 2456 d4c7d1257b85e5c2f200930975c66b9f "bibtex final_report"
-  "final_report.out" 1733285568 2974 c40ab1461db74004ea376226e49afcbd "pdflatex"
-  "final_report.tex" 1733285564 51229 c73d07b15dd614da3d86ac20026ca972 ""
-  "frametimes.png" 1733282721 19613 63073cef73f7f443da3e1723c9e13c48 ""
+  "final_report.aux" 1733719946 6268 eef95db1112f29cfd8a2b967fd675f9e "pdflatex"
+  "final_report.bbl" 1733719943 2456 d4c7d1257b85e5c2f200930975c66b9f "bibtex final_report"
+  "final_report.out" 1733719946 2974 c40ab1461db74004ea376226e49afcbd "pdflatex"
+  "final_report.tex" 1733719939 52601 0398fd06fab18e68a9eec3d67a11d823 ""
+  "frametimes.png" 1733712446 27912 985312ad6e52f34c8a43173cd2aa83a7 ""
   "ieeeconf.cls" 1729233552 202167 c8a8a2004c9762153e255667fc17d954 ""
-  "ratios.png" 1733282728 27897 e654e9da255dc2800b80f40bb4ef7040 ""
-  "speedups.png" 1733283007 23231 0e8efd28ab0ebf6e655913e814277567 ""
+  "ratios.png" 1733712439 42073 5c46c55ddf3c8f6049e82900a69f4aa4 ""
+  "speedups.png" 1733712426 32608 125a57dc58423befc7240208b673d349 ""
   "spmat.PNG" 1733279791 23869 5673b5989a16c1070aa67229dc86bd81 ""
   "tablecloth.png" 1733284369 53249 69ccce599155659dfa4cd929115c08d6 ""
   (generated)

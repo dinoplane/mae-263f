@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.18)  3 DEC 2024 20:12
+This is pdfTeX, Version 3.141592653-2.6-1.40.26 (TeX Live 2024) (preloaded format=pdflatex 2024.10.18)  8 DEC 2024 20:52
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -540,80 +540,76 @@ LaTeX Warning: `h' float specifier changed to `ht'.
 
 
 ]
-Overfull \hbox (0.69958pt too wide) in paragraph at lines 223--249
+
+
+
+[4]
+Overfull \hbox (0.69958pt too wide) in paragraph at lines 241--267
  [][] 
  []
 
-<tablecloth.png, id=123, 543.83176pt x 442.0515pt>
+<tablecloth.png, id=129, 543.83176pt x 442.0515pt>
 File: tablecloth.png Graphic file (type png)
 <use tablecloth.png>
-Package pdftex.def Info: tablecloth.png  used on input line 253.
+Package pdftex.def Info: tablecloth.png  used on input line 271.
 (pdftex.def)             Requested size: 227.64894pt x 185.03981pt.
-<frametimes.PNG, id=124, 328.8285pt x 260.172pt>
+<frametimes.PNG, id=130, 433.62pt x 325.215pt>
 File: frametimes.PNG Graphic file (type png)
 <use frametimes.PNG>
-Package pdftex.def Info: frametimes.PNG  used on input line 289.
-(pdftex.def)             Requested size: 227.64894pt x 180.12228pt.
+Package pdftex.def Info: frametimes.PNG  used on input line 307.
+(pdftex.def)             Requested size: 227.64894pt x 170.74043pt.
 
-Underfull \hbox (badness 10000) in paragraph at lines 221--292
+Underfull \hbox (badness 10000) in paragraph at lines 239--310
 [][] []
  []
 
-<ratios.png, id=125, 328.8285pt x 260.172pt>
+<ratios.png, id=131, 433.62pt x 325.215pt>
 File: ratios.png Graphic file (type png)
 <use ratios.png>
-Package pdftex.def Info: ratios.png  used on input line 328.
-(pdftex.def)             Requested size: 227.64894pt x 180.12228pt.
-<speedups.png, id=126, 328.8285pt x 260.172pt>
+Package pdftex.def Info: ratios.png  used on input line 346.
+(pdftex.def)             Requested size: 227.64894pt x 170.74043pt.
+<speedups.png, id=132, 433.62pt x 325.215pt>
 File: speedups.png Graphic file (type png)
 <use speedups.png>
-Package pdftex.def Info: speedups.png  used on input line 362.
-(pdftex.def)             Requested size: 227.64894pt x 180.12228pt.
+Package pdftex.def Info: speedups.png  used on input line 381.
+(pdftex.def)             Requested size: 227.64894pt x 170.74043pt.
 
 
-[4 <./tablecloth.png> <./frametimes.png>]
+[5 <./tablecloth.png> <./frametimes.png>]
 
-[5 <./ratios.png> <./speedups.png>]
-<spmat.PNG, id=140, 284.262pt x 267.399pt>
+[6 <./ratios.png> <./speedups.png>]
+<spmat.PNG, id=145, 284.262pt x 267.399pt>
 File: spmat.PNG Graphic file (type png)
 <use spmat.PNG>
-Package pdftex.def Info: spmat.PNG  used on input line 373.
+Package pdftex.def Info: spmat.PNG  used on input line 391.
 (pdftex.def)             Requested size: 177.06458pt x 166.56497pt.
 
-Underfull \vbox (badness 3735) has occurred while \output is active []
 
 
 
-
-
-[6
+[7
 
 
  <./spmat.PNG>]
 
-
-
-[7]
 <chaos1.png, id=153, 1154.51324pt x 597.432pt>
 File: chaos1.png Graphic file (type png)
 <use chaos1.png>
-Package pdftex.def Info: chaos1.png  used on input line 420.
+Package pdftex.def Info: chaos1.png  used on input line 426.
 (pdftex.def)             Requested size: 252.94499pt x 130.88847pt.
 
-Overfull \hbox (7.22688pt too wide) in paragraph at lines 420--421
+Overfull \hbox (7.22688pt too wide) in paragraph at lines 426--427
  [][] 
  []
 
 
 
-(./final_report.bbl
+[8 <./chaos1.PNG>] (./final_report.bbl
 Underfull \hbox (badness 1565) in paragraph at lines 8--9
 \OT1/ptm/m/it/8 Sym-po-sium on Com-puter An-i-ma-tion\OT1/ptm/m/n/8 , SCA '03, (Goslar, DEU),
  []
 
 
-
-[8 <./chaos1.PNG>]
 Underfull \hbox (badness 1496) in paragraph at lines 38--39
 []\OT1/ptm/m/n/8 A. Eftekhari, D. Pasadakis, M. Bollh[]ofer, S. Schei-deg-ger, and
  []
@@ -647,13 +643,13 @@ Package rerunfilecheck Info: File `final_report.out' has not changed.
 Here is how much of TeX's memory you used:
  13377 strings out of 473578
  216443 string characters out of 5732241
- 647508 words of memory out of 5000000
+ 646508 words of memory out of 5000000
  36028 multiletter control sequences out of 15000+600000
  597277 words of font info for 106 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,12n,79p,1803b,581s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,1803b,500s stack positions out of 10000i,1000n,20000p,200000b,200000s
 <c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><c:/texlive/2024/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb><c:/texlive/2024/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb><c:/texlive/2024/texmf-dist/fonts/type1/urw/times/utmb8a.pfb><c:/texlive/2024/texmf-dist/fonts/type1/urw/times/utmbi8a.pfb><c:/texlive/2024/texmf-dist/fonts/type1/urw/times/utmr8a.pfb><c:/texlive/2024/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on final_report.pdf (9 pages, 948002 bytes).
+Output written on final_report.pdf (9 pages, 971492 bytes).
 PDF statistics:
  254 PDF objects out of 1000 (max. 8388607)
  197 compressed objects within 2 object streams
